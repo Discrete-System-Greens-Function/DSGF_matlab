@@ -76,8 +76,6 @@ file_name_saved = ['results_' description '_' time_stamp]; % File name where res
 %%%%%%%%%%%%%%%%%%
 
 % Show figure axes?
-% 0: Do not show figure axes
-% 1: Show figure axes
 show_axes = true;
 
 
@@ -88,9 +86,9 @@ show_axes = true;
 % Calculation approach
 % 'direct' = direct matrix inversion using 'mldivide' operator
 % 'iterative' =  iterative solver from Martin et al.
-calc_approach = 'direct';
+calc_approach = CalculationOption.direct;
 
-% Conduct convergence analysis? (0 = "no", 1 = "yes")
+% Conduct convergence analysis?
 convergence_analysis = true;
 
 
@@ -304,11 +302,11 @@ for omega_loop = 1:N_omega % Loop through all frequencies
     % Record time at start of frequency loop
     t1 = toc;
     
-    if strcmp(calc_approach, 'direct') % Direct matrix inversion approach
+    if calc_approach == CalculationOption.direct
         
         [ G_sys_2D, Trans, Q_omega_bulk(omega_loop, :), Q_omega_subvol(omega_loop, :) ] = direct_function(omega(omega_loop), r, epsilon(omega_loop)*ones(N,1), epsilon_ref, delta_V_vector, T_vector, ind_bulk);
         
-    elseif strcmp(calc_approach, 'iterative') % Iterative solver with only columns stored
+    elseif calc_approach == CalculationOption.iterative
         
         % THIS IS STILL UNDER CONSTUCTION
         
