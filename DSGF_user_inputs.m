@@ -107,32 +107,32 @@ observation_point = [0,0,60e-9]; % [m]
 % 1: Do output
 
 % Output the power dissipated in every subvolume?
-output.power_dissipated_subvol = 1;
+output.power_dissipated_subvol = true;
 
 % Output the power dissipated in each bulk object?
-output.power_dissipated_bulk = 1;
+output.power_dissipated_bulk = true;
 
 % Output the total and spectral conductance for each bulk object?
-output.conductance = 1;
+output.conductance = true;
 
 % Output the transmission coefficient matrix?
-output.transmission_coefficient_matrix = 1;
+output.transmission_coefficient_matrix = true;
 
 % Output the DSGF matrices for every frequency?
-output.DSGF_matrix = 1;
+output.DSGF_matrix = true;
 
 % Output the local density of states (LDOS)?
 % NOTE: This only works when an observation point is given as an input.
-output.LDOS = 1;
+output.LDOS = true;
 
 % Output the heat transfer coefficient?
-output.heat_transfer_coefficient = 1;
+output.heat_transfer_coefficient = true;
 
 % Save figures?
-output.save_fig = 1;
+output.save_fig = true;
 
 % Save all Workspace variables in .mat file?
-output.save_workspace = 1;
+output.save_workspace = true;
 
                            
 %**************************END OF USER INPUTS**************************%

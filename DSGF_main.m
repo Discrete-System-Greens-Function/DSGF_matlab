@@ -78,7 +78,7 @@ file_name_saved = ['results_' description '_' time_stamp]; % File name where res
 % Show figure axes?
 % 0: Do not show figure axes
 % 1: Show figure axes
-show_axes = 1;
+show_axes = true;
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -91,7 +91,7 @@ show_axes = 1;
 calc_approach = 'direct';
 
 % Conduct convergence analysis? (0 = "no", 1 = "yes")
-convergence_analysis = 1;
+convergence_analysis = true;
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -148,7 +148,7 @@ FIG_voxel = figure(1);
 xlabel('x-axis (m)');
 ylabel('y-axis (m)');
 zlabel('z-axis (m)');
-if show_axes == 0
+if ~show_axes
     grid off
     axis off
     set(gca, 'fontsize', 30)
@@ -163,7 +163,7 @@ xlabel('x-axis [m]')
 ylabel('y-axis [m]')
 zlabel('z-axis [m]')
 grid on
-if show_axes == 0
+if ~show_axes
     grid off
     axis off
     set(gca, 'fontsize', 30)
@@ -264,7 +264,7 @@ end
 % Check convergence criteria before proceeding %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-if convergence_analysis == 1
+if convergence_analysis
     % Set tolerances
     tol_1 = 1;
     tol_2 = 6;
@@ -468,8 +468,6 @@ if show_axes == 0
 end
 view(35,20)
 
-
-%%
 % XY-PLANE CUT: Subvolume heat map for half particles
 FIG_6 = figure(6);
 %[vert, fac] = voxel_image( r(1:N1,:), L_sub(1), [], [], [], [], 'heatmap', Q_total_subvol(1:N1).' ); % Absorber (T = 0 K)
