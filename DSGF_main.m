@@ -76,8 +76,6 @@ file_name_saved = ['results_' description '_' time_stamp]; % File name where res
 %%%%%%%%%%%%%%%%%%
 
 % Show figure axes?
-% 0: Do not show figure axes
-% 1: Show figure axes
 show_axes = true;
 
 
@@ -88,9 +86,9 @@ show_axes = true;
 % Calculation approach
 % 'direct' = direct matrix inversion using 'mldivide' operator
 % 'iterative' =  iterative solver from Martin et al.
-calc_approach = 'direct';
+calc_approach = CalculationOption.direct;
 
-% Conduct convergence analysis? (0 = "no", 1 = "yes")
+% Conduct convergence analysis?
 convergence_analysis = true;
 
 
@@ -203,7 +201,7 @@ N_omega = length(omega);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SiO2 dielectric function %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
-if strcmp(material, 'SiO_2')
+if material == Material.SiO_2
 
     % Dielectric function of thermal objects
     epsilon = SiO2_dielectric_function(omega); % (N x 1) vector of all dielectric functions for every frequency
@@ -213,7 +211,7 @@ end % End SiO2 dielectric function
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SiC dielectric function %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
-if strcmp(material, 'SiC')
+if material == Material.SiC
 
     epsilon = SiC_dielectric_function(omega); % (N x 1) vector of all dielectric functions for every frequency
 
@@ -222,7 +220,7 @@ end % End SiC dielectric function
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SiN dielectric function %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
-if strcmp(material, 'SiN')
+if material == Material.SiN
 
     % Dielectric function of thermal objects
     epsilon = SiN_dielectric_function(omega); % (N x 1) vector of all dielectric functions for every frequency
@@ -238,7 +236,7 @@ FIG_dielectric_function = figure(3);
 plot(omega, real(epsilon), 'x-', omega, imag(epsilon), 'o--', 'linewidth', 2)
 xlabel('Frequency [rad/s]', 'fontsize', 12)
 ylabel('Dielectric function, \epsilon', 'fontsize', 12)
-title(['Dielectric function of ' material ', N_o_m_e_g_a = ' num2str(N_omega)], 'fontsize', 16)
+title(['Dielectric function of ' string(material) ', N_o_m_e_g_a = ' num2str(N_omega)], 'fontsize', 16)
 legend('Real part', 'Imaginary part', 'location', 'best')
 set(gca, 'fontsize', 16)
 axis tight
@@ -304,11 +302,11 @@ for omega_loop = 1:N_omega % Loop through all frequencies
     % Record time at start of frequency loop
     t1 = toc;
     
-    if strcmp(calc_approach, 'direct') % Direct matrix inversion approach
+    if calc_approach == CalculationOption.direct
         
         [ G_sys_2D, Trans, Q_omega_bulk(omega_loop, :), Q_omega_subvol(omega_loop, :) ] = direct_function(omega(omega_loop), r, epsilon(omega_loop)*ones(N,1), epsilon_ref, delta_V_vector, T_vector, ind_bulk);
         
-    elseif strcmp(calc_approach, 'iterative') % Iterative solver with only columns stored
+    elseif calc_approach == CalculationOption.iterative
         
         % THIS IS STILL UNDER CONSTUCTION
         
@@ -458,7 +456,7 @@ FIG_5 = figure(5);
 xlabel('x-axis (m)');
 ylabel('y-axis (m)');
 zlabel('z-axis (m)');
-if show_axes == 0
+if ~show_axes
     grid off
     axis off
     %cb = colorbar;
@@ -468,6 +466,7 @@ if show_axes == 0
 end
 view(35,20)
 
+%%
 % XY-PLANE CUT: Subvolume heat map for half particles
 FIG_6 = figure(6);
 %[vert, fac] = voxel_image( r(1:N1,:), L_sub(1), [], [], [], [], 'heatmap', Q_total_subvol(1:N1).' ); % Absorber (T = 0 K)
@@ -557,7 +556,7 @@ end % End conductance calculations
 %%%%%%%%%%%%%%%%
 
 % Save all workspace variables
-if output.save_workspace == 1
+if output.save_workspace
     clear FIG_4 FIG_5 FIG_6 FIG_7 FIG_8 FIG_9 FIG_10 FIG_voxel
     save([saveDir, '/', file_name_saved])
 end

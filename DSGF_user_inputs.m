@@ -59,7 +59,7 @@ origin = [0,0,0;
 %     'SiN'
 %     'user_defined'
 
-material = 'SiO_2';
+material = Material.SiO_2;
 
 
 %******************TEMPERATURE OF EACH OBJECT******************%
@@ -139,14 +139,3 @@ output.save_workspace = true;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 DSGF_main(description, discretization, volume, origin, material, T, T_cond, epsilon_ref, omega, observation_point, output);
-
-
-
-
-
-
-
-
-
-
-
