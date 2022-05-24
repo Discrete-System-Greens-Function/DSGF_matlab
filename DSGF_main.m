@@ -203,7 +203,7 @@ N_omega = length(omega);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SiO2 dielectric function %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
-if strcmp(material, 'SiO_2')
+if material == Material.SiO_2
 
     % Dielectric function of thermal objects
     epsilon = SiO2_dielectric_function(omega); % (N x 1) vector of all dielectric functions for every frequency
@@ -213,7 +213,7 @@ end % End SiO2 dielectric function
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SiC dielectric function %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
-if strcmp(material, 'SiC')
+if material == Material.SiC
 
     epsilon = SiC_dielectric_function(omega); % (N x 1) vector of all dielectric functions for every frequency
 
@@ -222,7 +222,7 @@ end % End SiC dielectric function
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SiN dielectric function %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
-if strcmp(material, 'SiN')
+if material == Material.SiN
 
     % Dielectric function of thermal objects
     epsilon = SiN_dielectric_function(omega); % (N x 1) vector of all dielectric functions for every frequency
@@ -238,7 +238,7 @@ FIG_dielectric_function = figure(3);
 plot(omega, real(epsilon), 'x-', omega, imag(epsilon), 'o--', 'linewidth', 2)
 xlabel('Frequency [rad/s]', 'fontsize', 12)
 ylabel('Dielectric function, \epsilon', 'fontsize', 12)
-title(['Dielectric function of ' material ', N_o_m_e_g_a = ' num2str(N_omega)], 'fontsize', 16)
+title(['Dielectric function of ' string(material) ', N_o_m_e_g_a = ' num2str(N_omega)], 'fontsize', 16)
 legend('Real part', 'Imaginary part', 'location', 'best')
 set(gca, 'fontsize', 16)
 axis tight
@@ -458,7 +458,7 @@ FIG_5 = figure(5);
 xlabel('x-axis (m)');
 ylabel('y-axis (m)');
 zlabel('z-axis (m)');
-if show_axes == 0
+if ~show_axes
     grid off
     axis off
     %cb = colorbar;
@@ -468,6 +468,7 @@ if show_axes == 0
 end
 view(35,20)
 
+%%
 % XY-PLANE CUT: Subvolume heat map for half particles
 FIG_6 = figure(6);
 %[vert, fac] = voxel_image( r(1:N1,:), L_sub(1), [], [], [], [], 'heatmap', Q_total_subvol(1:N1).' ); % Absorber (T = 0 K)
@@ -557,7 +558,7 @@ end % End conductance calculations
 %%%%%%%%%%%%%%%%
 
 % Save all workspace variables
-if output.save_workspace == 1
+if output.save_workspace
     clear FIG_4 FIG_5 FIG_6 FIG_7 FIG_8 FIG_9 FIG_10 FIG_voxel
     save([saveDir, '/', file_name_saved])
 end
