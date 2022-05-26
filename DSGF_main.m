@@ -201,31 +201,23 @@ N_omega = length(omega);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SiO2 dielectric function %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
-if material == Material.SiO_2
+switch (material)
+	case Material.SiO_2
 
-    % Dielectric function of thermal objects
-    epsilon = SiO2_dielectric_function(omega); % (N x 1) vector of all dielectric functions for every frequency
+	    % Dielectric function of thermal objects
+	    epsilon = SiO2_dielectric_function(omega); % (N x 1) vector of all dielectric functions for every frequency
 
-end % End SiO2 dielectric function
+	case Material.SiC
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% SiC dielectric function %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%
-if material == Material.SiC
+	    epsilon = SiC_dielectric_function(omega); % (N x 1) vector of all dielectric functions for every frequency
 
-    epsilon = SiC_dielectric_function(omega); % (N x 1) vector of all dielectric functions for every frequency
 
-end % End SiC dielectric function
+	case Material.SiN
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% SiN dielectric function %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%
-if material == Material.SiN
+	    % Dielectric function of thermal objects
+	    epsilon = SiN_dielectric_function(omega); % (N x 1) vector of all dielectric functions for every frequency
 
-    % Dielectric function of thermal objects
-    epsilon = SiN_dielectric_function(omega); % (N x 1) vector of all dielectric functions for every frequency
-
-end % End SiN dielectric function
+end
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%

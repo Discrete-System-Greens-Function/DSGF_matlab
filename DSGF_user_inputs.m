@@ -31,6 +31,8 @@ description = '2spheres';
 %     'dipole'
 %     'user_defined'
 
+% each bulk object needs its own discretization
+
 discretization = ["sphere_8", "sphere_8"];
 
 
@@ -102,9 +104,6 @@ observation_point = [0,0,60e-9]; % [m]
 
 
 %******************DESIRED OUTPUTS******************%
-
-% 0: Do NOT output
-% 1: Do output
 
 % Output the power dissipated in every subvolume?
 output.power_dissipated_subvol = true;
