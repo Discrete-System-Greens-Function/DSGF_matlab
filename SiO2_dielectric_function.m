@@ -1,4 +1,4 @@
-function [ epsilon ] = SiO2_dielectric_function( omega )
+function [ epsilon ] = SiO2_dielectric_function( omega, constants)
 
 % This code uses the Lorentz oscillator model to calculate the dielectric
 % function of silicon dioxide (SiO2).
@@ -9,17 +9,10 @@ function [ epsilon ] = SiO2_dielectric_function( omega )
 % 2019.
 
 % INPUTS:  omega         (N_omega x 1) vector of frequencies at which to calculate the dielectric function [rad/s]
+% 	   constants 	struct with all the neceessary constants
 %
 %
 % OUTPUTS: epsilon       dielectric function [-]
-
-
-% Constants
-q = 1.60218e-19;            % Number of joules per eV [J/eV]
-h_bar = 1.0545718e-34;      % Planck's constant [J*s]
-% k_b = 1.38064852e-23;       % Boltzmann constant [J/K]
-% epsilon_0 = 8.8542e-12;     % Permittivity of free space [F/m]
-% mu_0 = (4*pi)*(10^-7);      % Permeability of free space [H/m]
 
 % % Wave energy
 % E_joules = h_bar*omega; % [J]
@@ -28,7 +21,7 @@ h_bar = 1.0545718e-34;      % Planck's constant [J*s]
 % Dielectric function approximated with a Lorentz model
 epsilon_inf = 2.03843;                          % High-frequency limit of permittivity
 h_bar_omega_0 = [0.05624, 0.09952, 0.13355];    % [eV]
-omega_0 = (h_bar_omega_0*q)/(h_bar);            % [rad/s]
+omega_0 = (h_bar_omega_0*constants.q)/(constants.h_bar);            % [rad/s]
 %lambda_0 = [22.04432, 12.45818, 9.28364]*1e-6;  % [m]
 S = [0.93752, 0.05050, 0.60642];                % [-]
 Gamma = [0.09906, 0.05511, 0.05246];            % [-]

@@ -31,12 +31,14 @@ tic
 % Constants %
 %%%%%%%%%%%%%
 
-% q = 1.60218e-19;            % Number of joules per eV [J/eV]
-% h_bar = 1.0545718e-34;      % Planck's constant [J*s]
-% k_b = 1.38064852e-23;       % Boltzmann constant [J/K]
-% epsilon_0 = 8.8542e-12;     % Permittivity of free space [F/m]
-% mu_0 = (4*pi)*(10^-7);      % Permeability of free space [H/m]
-% c_0 = 299792458;            % Speed of light in vacuum [m/s]
+constants = struct();
+
+constants.q = 1.60218e-19;            % Number of joules per eV [J/eV]
+constants.h_bar = 1.0545718e-34;      % Planck's constant [J*s]
+constants.k_b = 1.38064852e-23;       % Boltzmann constant [J/K]
+constants.epsilon_0 = 8.8542e-12;     % Permittivity of free space [F/m]
+constants.mu_0 = (4*pi)*(10^-7);      % Permeability of free space [H/m]
+constants.c_0 = 299792458;            % Speed of light in vacuum [m/s]
 
 
 %%%%%%%%%%%%%%%%%%%%%%
@@ -197,25 +199,24 @@ end
 % Number of discretized frequencies
 N_omega = length(omega);
 
+%%%%%%%%%%%%%%%%%%%%%%%%
+% Dielectric Functions %
+%%%%%%%%%%%%%%%%%%%%%%%%
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% SiO2 dielectric function %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%
 switch (material)
 	case Material.SiO_2
 
-	    % Dielectric function of thermal objects
-	    epsilon = SiO2_dielectric_function(omega); % (N x 1) vector of all dielectric functions for every frequency
+	    epsilon = SiO2_dielectric_function(omega, constants); % (N x 1) vector of all dielectric functions for every frequency
 
 	case Material.SiC
 
-	    epsilon = SiC_dielectric_function(omega); % (N x 1) vector of all dielectric functions for every frequency
+	    epsilon = SiC_dielectric_function(omega, constants); % (N x 1) vector of all dielectric functions for every frequency
 
 
 	case Material.SiN
 
 	    % Dielectric function of thermal objects
-	    epsilon = SiN_dielectric_function(omega); % (N x 1) vector of all dielectric functions for every frequency
+	    epsilon = SiN_dielectric_function(omega, constants); % (N x 1) vector of all dielectric functions for every frequency
 
 end
 

@@ -1,4 +1,4 @@
-function [ epsilon_r ] = SiN_dielectric_function( omega )
+function [ epsilon_r ] = SiN_dielectric_function( omega, constants)
 
 % This code uses the Lorentz oscillator model to calculate the dielectric
 % function of silicon nitride (SiN). The dielectric function Lorentz 
@@ -10,19 +10,10 @@ function [ epsilon_r ] = SiN_dielectric_function( omega )
 % surface phonon-polaritons,” Sci. Adv., vol. 6, p. eabb4461, 2020.
 
 % INPUTS:  omega         (N_omega x 1) vector of frequencies at which to calculate the dielectric function [rad/s]
+%	   constants     struct containing all the necessary constants
 %
 %
 % OUTPUTS: epsilon_r     dielectric function [-]
-
-
-% Constants
-q = 1.60218e-19;            % Number of joules per eV [J/eV]
-h_bar = 1.0545718e-34;      % Planck's constant [J*s]
-k_b = 1.38064852e-23;       % Boltzmann constant [J/K]
-epsilon_0 = 8.8542e-12;     % Permittivity of free space [F/m]
-mu_0 = (4*pi)*(10^-7);      % Permeability of free space [H/m]
-
-
 
 
 M = 5; % Number of oscillations
@@ -55,8 +46,8 @@ epsilon_r = epsilon_inf + summation;
 
 
 % % Wave energy
-% E_joules = h_bar*omega; % [J]
-% E_eV = E_joules/q;      % [eV]
+% E_joules = constants.h_bar*omega; % [J]
+% E_eV = E_joules/constants.q;      % [eV]
 % 
 % % Dielectric function approximated with a Lorentz model
 % omega_TO = 93e12;              % Transverse optical phonon frequency [rad/s]
