@@ -372,7 +372,7 @@ end % End loop through all frequencies
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-[Q_total_subvol, Q_density_subvol, Q_total_subvol_matrix] = total_heat_dissipation_in_subvol(N, omega, Q_omega_subvol, delta_V_vector, r)
+[Q_total_subvol, Q_density_subvol, Q_total_subvol_matrix] = total_heat_dissipation_in_subvol(N, omega, Q_omega_subvol, delta_V_vector, r);
 
 %% 
 %%%%%%%%%%%%%%%%%%
@@ -420,7 +420,7 @@ FIG_4 = figure(4);
 xlabel('x-axis (m)');
 ylabel('y-axis (m)');
 zlabel('z-axis (m)');
-if show_axes == 0
+if ~show_axes
     grid off
     axis off
     colorbar off
