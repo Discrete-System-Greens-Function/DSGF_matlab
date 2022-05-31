@@ -1,3 +1,8 @@
+# Auto detect text files and perform LF normalization.
+* text=auto
+
+# Override file format when necessary, explicitly denoting which files are binary and not text.
+
 *.fig binary
 *.mat binary
 *.mdl binary diff merge=mlAutoMerge
