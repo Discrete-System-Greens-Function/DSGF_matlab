@@ -31,12 +31,14 @@ tic
 % Constants %
 %%%%%%%%%%%%%
 
-% q = 1.60218e-19;            % Number of joules per eV [J/eV]
-% h_bar = 1.0545718e-34;      % Planck's constant [J*s]
-% k_b = 1.38064852e-23;       % Boltzmann constant [J/K]
-% epsilon_0 = 8.8542e-12;     % Permittivity of free space [F/m]
-% mu_0 = (4*pi)*(10^-7);      % Permeability of free space [H/m]
-% c_0 = 299792458;            % Speed of light in vacuum [m/s]
+constants = struct();
+
+constants.q = 1.60218e-19;            % Number of joules per eV [J/eV]
+constants.h_bar = 1.0545718e-34;      % Planck's constant [J*s]
+constants.k_b = 1.38064852e-23;       % Boltzmann constant [J/K]
+constants.epsilon_0 = 8.8542e-12;     % Permittivity of free space [F/m]
+constants.mu_0 = (4*pi)*(10^-7);      % Permeability of free space [H/m]
+constants.c_0 = 299792458;            % Speed of light in vacuum [m/s]
 
 
 %%%%%%%%%%%%%%%%%%%%%%
@@ -197,35 +199,25 @@ end
 % Number of discretized frequencies
 N_omega = length(omega);
 
+%%%%%%%%%%%%%%%%%%%%%%%%
+% Dielectric Functions %
+%%%%%%%%%%%%%%%%%%%%%%%%
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% SiO2 dielectric function %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%
-if material == Material.SiO_2
+switch (material)
+	case Material.SiO_2
 
-    % Dielectric function of thermal objects
-    epsilon = SiO2_dielectric_function(omega); % (N x 1) vector of all dielectric functions for every frequency
+	    epsilon = SiO2_dielectric_function(omega, constants); % (N x 1) vector of all dielectric functions for every frequency
 
-end % End SiO2 dielectric function
+	case Material.SiC
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% SiC dielectric function %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%
-if material == Material.SiC
+	    epsilon = SiC_dielectric_function(omega, constants); % (N x 1) vector of all dielectric functions for every frequency
 
-    epsilon = SiC_dielectric_function(omega); % (N x 1) vector of all dielectric functions for every frequency
 
-end % End SiC dielectric function
+	case Material.SiN
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% SiN dielectric function %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%
-if material == Material.SiN
+	    epsilon = SiN_dielectric_function(omega, constants); % (N x 1) vector of all dielectric functions for every frequency
 
-    % Dielectric function of thermal objects
-    epsilon = SiN_dielectric_function(omega); % (N x 1) vector of all dielectric functions for every frequency
-
-end % End SiN dielectric function
+end
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -379,19 +371,8 @@ end % End loop through all frequencies
 % Calculate total heat dissipation in each subvolume %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% Total heat dissipated in a subvolume [W]
-Q_total_subvol = zeros(1,N); % Preallocate
-for ii = 1:N
-    Q_total_subvol(ii) = trapz(omega, Q_omega_subvol(:,ii));  % Heat dissipated in each subvolume [W]
-end
 
-% Total heat density dissipated in a subvolume [W/(m^3)]
-Q_density_subvol = Q_total_subvol./delta_V_vector; % Heat density dissipated in each subvolume [W/(m^3)]
-
-% Restructure heat dissipated in a subvolume from a vector to a matrix with
-% indices of coordinates intact
-Q_total_subvol_matrix = [r, Q_total_subvol.'];
-
+[Q_total_subvol, Q_density_subvol, Q_total_subvol_matrix] = total_heat_dissipation_in_subvol(N, omega, Q_omega_subvol, delta_V_vector, r);
 
 %% 
 %%%%%%%%%%%%%%%%%%
@@ -439,7 +420,7 @@ FIG_4 = figure(4);
 xlabel('x-axis (m)');
 ylabel('y-axis (m)');
 zlabel('z-axis (m)');
-if show_axes == 0
+if ~show_axes
     grid off
     axis off
     colorbar off
