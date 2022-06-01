@@ -58,14 +58,29 @@ description = '2spheres';
 %      discretization = {Discretization.sphere_8 "user_defined_discretization_2"}
 %
 
-discretization = {Discretization.sphere_8, Discretization.sphere_8};
+%discretization = {Discretization.sphere_8, Discretization.sphere_8};
+%discretization = {Discretization.sphere_8, "Gaussian_sphere_sigma0.2_rng9_N7399"};
+discretization = {"Gaussian_sphere_sigma0.2_rng9_N7399", "Gaussian_sphere_sigma0.2_rng9_N7399"};
 
 
-%**************************VOLUME OF EACH OBJECT**************************%
+%****************************SCALE EACH OBJECT****************************%
 
-% Characteriztic length (e.g., radius, side length, film thickness)
-L_char = [50e-9, 50e-9]; % [m]
+% Characteriztic length for scaling the discretized lattice of each bulk
+% object.
+%
+% If a pre-made sample is chosen, the characteristic length is:
+%     sphere: radius
+%     cube: side length
+%     thin film: film thickness
+%     dipole: radius
+%
+% If a user-defined input is chosen, the characteristic length is the
+% scaling factor of the user-input cubic lattice.
+%
 
+%L_char = [50e-9, 50e-9]; % [m]
+%L_char = [50e-9, 1e-9]; % [m]
+L_char = [1e-9, 1e-9]; % [m]
 
 
 %**************************ORIGIN OF EACH OBJECT**************************%
