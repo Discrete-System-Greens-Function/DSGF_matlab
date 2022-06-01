@@ -6,7 +6,7 @@ function [ d_min_center, d_min_edge, r_1_min, r_2_min ] = calculate_surface_sepa
 % INPUTS:  r_1          (N_1 x 3) matrix containing points of all cubic lattice points of object #1
 %          r_2          (N_2 x 3) matrix containing points of all cubic lattice points of object #2
 %          L_sub_1      Length of a side of a subvolume in object #1 (i.e., dipole diameter) [m]
-%          L_sub_2      Length of a side of a subvolume in object #1 (i.e., dipole diameter) [m]
+%          L_sub_2      Length of a side of a subvolume in object #2 (i.e., dipole diameter) [m]
 %         
 %
 % OUTPUTS: d_min_center  Minimum separation from center of subvolume in object
