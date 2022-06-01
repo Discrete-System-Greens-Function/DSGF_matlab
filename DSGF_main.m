@@ -316,93 +316,13 @@ end % End loop through all frequencies
 
 [Q_total_subvol, Q_density_subvol, Q_total_subvol_matrix] = total_heat_dissipation_in_subvol(N, omega, Q_omega_subvol, delta_V_vector, r);
 
+
 %% 
 %%%%%%%%%%%%%%%%%%
 % Plot heat maps %
 %%%%%%%%%%%%%%%%%%
 
-% XY-PLANE CUT: Find locations and indices for particle halves cut down the middle (cut along the xy-plane)
-r_z_avg = (max(r(:,3)) + min(r(:,3)))/2;
-ind_half_xy = find(r(:,3) >= r_z_avg);
-r_half_xy = r(ind_half_xy, :);
-Q_total_subvol_half_xy = Q_total_subvol(ind_half_xy);
-
-% XZ-PLANE CUT: Find locations and indices for particle halves cut down the middle (cut along the xz-plane)
-r_y_avg = (max(r(:,2)) + min(r(:,2)))/2;
-ind_half_xz = find(r(:,2) >= r_y_avg);
-r_half_xz = r(ind_half_xz, :);
-Q_total_subvol_half_xz = Q_total_subvol(ind_half_xz);
-
-% XY-PLANE CUT: Find locations and indices of a single slice (one subvolume thick)
-ind_slice_xy = find((r(:,3) >= r_z_avg) & (r(:,3) <= r_z_avg + L_sub(1)));
-r_slice_xy = r(ind_slice_xy, :);
-Q_total_subvol_slice_xy = Q_total_subvol(ind_slice_xy);
-
-% XZ-PLANE CUT: Find locations and indices of a single slice (one subvolume thick)
-ind_slice_xz = find((r(:,2) >= r_y_avg) & (r(:,2) <= r_y_avg + L_sub(1)));
-r_slice_xz = r(ind_slice_xz, :);
-Q_total_subvol_slice_xz = Q_total_subvol(ind_slice_xz);
-
-% Set heatmap color axis limits
-abs_limit = max(abs(Q_total_subvol));
-c_limits = [-abs_limit, abs_limit];
-%c_limits = [min(Q_total_subvol), max(Q_total_subvol)];
-
-
-%%
-
-%close all
-
-% plotting the subvolume heatmap in 2 seperate views
-subvol_heatmap(r, L_sub, Q_total_subvol, c_limits, show_axes, output, saveDir);
-
-%%
-% XY-PLANE CUT: Subvolume heat map for half particles
-FIG_6 = figure(6);
-%[vert, fac] = voxel_image( r(1:N1,:), L_sub(1), [], [], [], [], 'heatmap', Q_total_subvol(1:N1).' ); % Absorber (T = 0 K)
-%[vert, fac] = voxel_image( r(N1+1:end,:), L_sub(1), [], [], [], [], 'heatmap', Q_total_subvol(N1+1:end).' ); % Emitter (T = 300 K)
-[vert, fac] = voxel_image( r_half_xy, L_sub(1), [], [], [], [], 'heatmap', Q_total_subvol_half_xy.', c_limits );
-%view(2)
-
-
-
-% XY-PLANE CUT: Subvolume heat map for slices of particles
-FIG_7 = figure(7);
-%[vert, fac] = voxel_image( r(1:N1,:), L_sub(1), [], [], [], [], 'heatmap', Q_total_subvol(1:N1).' ); % Absorber (T = 0 K)
-%[vert, fac] = voxel_image( r(N1+1:end,:), L_sub(1), [], [], [], [], 'heatmap', Q_total_subvol(N1+1:end).' ); % Emitter (T = 300 K)
-[vert, fac] = voxel_image( r_slice_xy, L_sub(1), [], [], [], [], 'heatmap', Q_total_subvol_slice_xy.', c_limits );
-%view(2)
-
-% XZ-PLANE CUT: Subvolume heat map for half particles
-FIG_8 = figure(8);
-%[vert, fac] = voxel_image( r(1:N1,:), L_sub(1), [], [], [], [], 'heatmap', Q_total_subvol(1:N1).' ); % Absorber (T = 0 K)
-%[vert, fac] = voxel_image( r(N1+1:end,:), L_sub(1), [], [], [], [], 'heatmap', Q_total_subvol(N1+1:end).' ); % Emitter (T = 300 K)
-[vert, fac] = voxel_image( r_half_xz, L_sub(1), [], [], [], [], 'heatmap', Q_total_subvol_half_xz.', c_limits );
-%view(2)
-
-% XZ-PLANE CUT: Subvolume heat map for slices of particles
-FIG_9 = figure(9);
-%[vert, fac] = voxel_image( r(1:N1,:), L_sub(1), [], [], [], [], 'heatmap', Q_total_subvol(1:N1).' ); % Absorber (T = 0 K)
-%[vert, fac] = voxel_image( r(N1+1:end,:), L_sub(1), [], [], [], [], 'heatmap', Q_total_subvol(N1+1:end).' ); % Emitter (T = 300 K)
-[vert, fac] = voxel_image( r_slice_xz, L_sub(1), [], [], [], [], 'heatmap', Q_total_subvol_slice_xz.', c_limits );
-%view(2)
-
-% Save figure files
-if output.save_fig
-    fig_path_6 = [saveDir '/' file_name_saved '_heatmap_xy_half.fig'];
-    fig_path_7 = [saveDir '/' file_name_saved '_heatmap_xy_slice.fig'];
-    fig_path_8 = [saveDir '/' file_name_saved '_heatmap_xz_half.fig'];
-    fig_path_9 = [saveDir '/' file_name_saved '_heatmap_xz_slice.fig'];
-    saveas(FIG_6, fig_path_6)
-    saveas(FIG_7, fig_path_7)
-    saveas(FIG_8, fig_path_8)
-    saveas(FIG_9, fig_path_9)
-end
-
-
-
-%%
-
+subvol_heatmap_plotting(r, L_sub, Q_total_subvol, show_axes, output, saveDir);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Calculate spectral and total conductance at temperature, T_conductance %
