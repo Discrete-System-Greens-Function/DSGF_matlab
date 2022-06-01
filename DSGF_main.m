@@ -334,25 +334,7 @@ if output.conductance
 
     [ G_omega_bulk_12, G_bulk_12 ] = conductance_bulk( Trans_omega_12, T_conductance, omega );
 
-
-    % Plot spectral conductance vs. frequency
-    FIG_10 = figure(10);
-    semilogy(omega, G_omega_bulk_12, '-x', 'linewidth', 2)
-    %plot(E_eV, G_omega_eV.', '-x', 'linewidth', 2)
-    xlabel('Frequency [rad/s]')
-    ylabel('Spectral conductance, G_\omega  [WK^-^1(rad/s)^-^1]', 'fontsize', 12)
-%     title([material ', ' geometry ', R_1 = ' num2str(radius_1*(10^9)) 'nm, R_2 = ' num2str(radius_2*(10^9)) 'nm, d_c = '...
-%         num2str(d_center*(10^9)) 'nm, ' num2str(N_omega) ' frequencies, N = ' num2str(N) ' total subvolumes'], 'fontsize', 16)
-    axis tight
-    set(gca, 'fontsize', 22)
-    %legend([num2str(N(1)/2) ' subvolumes'], 'location', 'best')
-    grid on
-
-    % Save figure files
-    if output.save_fig
-        fig_path_10 = [saveDir '/' file_name_saved '_spectralConductance.fig'];
-        saveas(FIG_10, fig_path_10)
-    end
+	spectral_conductance_plot(omega, G_omega_bulk_12, output, saveDir);
 
 end % End conductance calculations
 
@@ -363,7 +345,6 @@ end % End conductance calculations
 
 % Save all workspace variables
 if output.save_workspace
-    clear FIG_4 FIG_5 FIG_6 FIG_7 FIG_8 FIG_9 FIG_10 FIG_voxel
     save([saveDir, '/', file_name_saved])
 end
 
