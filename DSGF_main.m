@@ -1,4 +1,4 @@
-function [] = DSGF_main(description, discretization, volume, origin, material, T, T_conductance, epsilon_ref, omega, observation_point, output)
+function [] = DSGF_main(description, discretization, L_char, origin, material, T, T_conductance, epsilon_ref, omega, observation_point, output)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
@@ -6,7 +6,7 @@ function [] = DSGF_main(description, discretization, volume, origin, material, T
 % heat transfer between 3D objects.
 %
 % INPUTS:   discretization
-%           volume
+%           L_char
 %           origin
 %           material
 %           T
@@ -100,51 +100,111 @@ convergence_analysis = true;
 % Number of bulk objects
 N_bulk = length(discretization);
 
-% Geometry of each bulk object
-geometry = extractBefore(discretization, '_');
+% Determine file structure of bulk object discretization and extract
+% discretization information.
+N_each_object = zeros(N_bulk,1);       % Preallocate
+volume = zeros(N_bulk,1);              % Preallocate
+r_each_object = cell(N_bulk,1);        % Preallocate
+ind_bulk = zeros(N_bulk,1);            % Preallocate
+delta_V_each_object = cell(N_bulk,1);  % Preallocate
+L_sub_each_object = cell(N_bulk,1);    % Preallocate
+for ii = 1:N_bulk % Loop through all bulk objects
+    if isenum(discretization{ii}) % Sample discretization is specified
+        discFile = string(discretization{ii});       % File name of discretization
+        geometry = extractBefore(discFile, '_');     % Geometry of bulk object
+        discDir = append('Input_parameters/Discretizations/', geometry); % Directory where discretization is stored
 
-% Number of subvolumes in each bulk object
-N1 = str2double(extractAfter(discretization(1), '_'));
-N2 = str2double(extractAfter(discretization(2), '_'));
-N = N1 + N2;
+        % Import unscaled discretization of each object
+        r_each_object{ii} = xlsread(append(append(append(discDir, '/'), discFile), '.xlsx'));
 
-% Subvolume size
-delta_V_1 = volume(1)/N1; % Volume of subvolumes in object #1
-delta_V_2 = volume(2)/N2; % Volume of subvolumes in object #2
-delta_V_vector = [delta_V_1.*ones(N1,1); delta_V_2.*ones(N2,1)]; % Volume of each subvolume [m^3]
-L_sub = delta_V_vector.^(1/3);                                   % Length of side of a cubic subvolume
-L_sub_1 = L_sub(1);
-L_sub_2 = L_sub(N1+1);
+        % Bulk object start index (this MUST come before N_vector(ii) is updated).
+        ind_bulk(ii) = sum(ind_bulk(1:ii)) + 1;
 
-% Directories where discretizations are stored
-discDir_1 = append('Input_parameters/Discretizations/', geometry(1));
-discDir_2 = append('Input_parameters/Discretizations/', geometry(2));
+        % Number of subvolumes in each bulk object
+        [N_each_object(ii),~] = size(r_each_object{ii});
 
-% Discretized lattice
-r1 = L_sub_1.*xlsread(append(append(append(discDir_1, '/'), discretization(1)), '.xlsx')) + origin(1,:);
-r2 = L_sub_2.*xlsread(append(append(append(discDir_2, '/'), discretization(2)), '.xlsx')) + origin(2,:);
-r = [r1; r2];
+        % Scale sample discretizations based on the geometry
+        switch (geometry)
+            case "sphere"
+                volume(ii) = (4/3)*pi*(L_char(ii).^3);  % Volume of sphere [m^3]
+            case "cube"
+                volume(ii) = (L_char(ii).^3);           % Volume of cube [m^3]
+            case "thin_film"
 
+            case "dipole"
+                volume(ii) = (4/3)*pi*(L_char(ii).^3);  % Volume of spherical dipole [m^3]
+        end % End switch-case through geometries
+
+        % Subvolume size for each object (uniform discretization)
+        delta_V_each_object{ii} = ones(N_each_object(ii), 1).*(volume(ii)/N_each_object(ii)); % Volume of subvolumes in each object (uniform discretization)
+        L_sub_each_object{ii} = delta_V_each_object{ii}.^(1/3);  % Length of side of a cubic subvolume in each object (uniform discretization)
+
+        % Scale discretization
+        r_each_object{ii} = L_sub_each_object{ii}(1).*r_each_object{ii};
+
+    else % User-defined discretization is specified
+        discFile = discretization{ii}; % File name of discretization
+        discDir = "Input_parameters/Discretizations/User_defined"; % Directory where discretization is stored
+
+        % Import unscaled discretization of each object
+        r_each_object{ii} = readmatrix(append(append(append(discDir, '/'), discFile), '.txt'));
+
+        % Scale discretization
+        r_each_object{ii} = L_char(ii).*r_each_object{ii};
+
+        % Bulk object start index (this MUST come before N_vector(ii) is updated).
+        ind_bulk(ii) = sum(ind_bulk(1:ii)) + 1;
+
+        % Number of subvolumes in each bulk object
+        [N_each_object(ii),~] = size(r_each_object{ii});
+
+        % Subvolume size for each object (uniform discretization)
+        [L_sub, delta_V] = calculate_Lsub_uniform(r_each_object{ii});
+        delta_V_each_object{ii} = ones(N_each_object(ii), 1).*delta_V; % Volume of subvolumes in each object (uniform discretization)
+        L_sub_each_object{ii} = ones(N_each_object(ii), 1).*L_sub;     % Length of side of a cubic subvolume in each object (uniform discretization)
+
+    end % End if sample or user-defined discretization
+
+    % Move the center-of-mass of each object to the origin [0,0,0]
+    r_each_object{ii} = center_of_mass(r_each_object{ii});
+
+    % Move each discretization to its user-specified origin
+    r_each_object{ii} = r_each_object{ii} + repmat(origin(ii,:), N_each_object(ii), 1);
+
+end % End loop through bulk objects
+
+% Discretized lattice including subvolumes of all objects in one matrix (N x 3 matrix)
+r = cell2mat(r_each_object);
+
+% Total number of subvolumes
+[N,~] = size(r);
+
+% Subvolume size for all N subvolumes (N x 1 vectors)
+delta_V_vector = cell2mat(delta_V_each_object); % Volume of subvolumes for all N subvolumes
+L_sub_vector = cell2mat(L_sub_each_object);     % Length of side of a cubic subvolume for all N subvolumes
+
+% UPDATE FOR MORE THAN 2 OBJECTS!
 % Center-of-mass separation distance [m]
 d_center = norm(origin(1,:) - origin(2,:)); 
 
+% UPDATE FOR MORE THAN 2 OBJECTS!
 % Closest vacuum gap separation distance [m]
-[ d_min_center, d_min_edge, r_1_min, r_2_min ] = calculate_surface_separation( r1, r2, L_sub_1, L_sub_2);
+[ d_min_center, d_min_edge, r_1_min, r_2_min ] = calculate_surface_separation( r_each_object{1}, r_each_object{2}, L_sub_each_object{1}(1),  L_sub_each_object{2}(1));
 
+% UPDATE FOR MORE THAN 2 OBJECTS!
 % Temperature
-T_vector = [T(1).*ones(N1,1); T(2).*ones(N2,1)];
+T_vector = [T(1).*ones(N_each_object(1),1); T(2).*ones(N_each_object(2),1)];
 
-% Bulk object start index
-ind_bulk = [1, N1+1];
 
 
 %%%%%%%%%%%%%%%%%%%%%%%
 % Plot discretization %
 %%%%%%%%%%%%%%%%%%%%%%%
 
+% UPDATE FOR OBJECTS WITH INDEPENDENT (BUT UNIFORM) SUBVOLUME SIZES!
 % Plot voxel image of discretization
 FIG_voxel = figure(1);
-[vert, fac] = voxel_image( r, L_sub(1), [], [], [], [], 'on', [], [] );
+[vert, fac] = voxel_image( r, L_sub_vector(1), [], [], [], [], 'on', [], [] );
 xlabel('x-axis (m)');
 ylabel('y-axis (m)');
 zlabel('z-axis (m)');
@@ -392,12 +452,12 @@ r_half_xz = r(ind_half_xz, :);
 Q_total_subvol_half_xz = Q_total_subvol(ind_half_xz);
 
 % XY-PLANE CUT: Find locations and indices of a single slice (one subvolume thick)
-ind_slice_xy = find((r(:,3) >= r_z_avg) & (r(:,3) <= r_z_avg + L_sub(1)));
+ind_slice_xy = find((r(:,3) >= r_z_avg) & (r(:,3) <= r_z_avg + L_sub_vector(1)));
 r_slice_xy = r(ind_slice_xy, :);
 Q_total_subvol_slice_xy = Q_total_subvol(ind_slice_xy);
 
 % XZ-PLANE CUT: Find locations and indices of a single slice (one subvolume thick)
-ind_slice_xz = find((r(:,2) >= r_y_avg) & (r(:,2) <= r_y_avg + L_sub(1)));
+ind_slice_xz = find((r(:,2) >= r_y_avg) & (r(:,2) <= r_y_avg + L_sub_vector(1)));
 r_slice_xz = r(ind_slice_xz, :);
 Q_total_subvol_slice_xz = Q_total_subvol(ind_slice_xz);
 
@@ -416,7 +476,7 @@ FIG_4 = figure(4);
 %subplot(1,2,1)
 %[vert, fac] = voxel_image( r(1:N1,:), L_sub(1), [], [], [], [], 'heatmap', Q_total_subvol(1:N1).' ); % Absorber (T = 0 K)
 %[vert, fac] = voxel_image( r(N1+1:end,:), L_sub(1), [], [], [], [], 'heatmap', Q_total_subvol(N1+1:end).' ); % Emitter (T = 300 K)
-[vert, fac] = voxel_image( r, L_sub(1), [], [], [], [], 'heatmap', Q_total_subvol.', c_limits );
+[vert, fac] = voxel_image( r, L_sub_vector(1), [], [], [], [], 'heatmap', Q_total_subvol.', c_limits );
 xlabel('x-axis (m)');
 ylabel('y-axis (m)');
 zlabel('z-axis (m)');
@@ -433,7 +493,7 @@ FIG_5 = figure(5);
 %subplot(1,2,2)
 %[vert, fac] = voxel_image( r(1:N1,:), L_sub(1), [], [], [], [], 'heatmap', Q_total_subvol(1:N1).' ); % Absorber (T = 0 K)
 %[vert, fac] = voxel_image( r(N1+1:end,:), L_sub(1), [], [], [], [], 'heatmap', Q_total_subvol(N1+1:end).' ); % Emitter (T = 300 K)
-[vert, fac] = voxel_image( r, L_sub(1), [], [], [], [], 'heatmap', Q_total_subvol.', c_limits );
+[vert, fac] = voxel_image( r, L_sub_vector(1), [], [], [], [], 'heatmap', Q_total_subvol.', c_limits );
 xlabel('x-axis (m)');
 ylabel('y-axis (m)');
 zlabel('z-axis (m)');
@@ -452,7 +512,7 @@ view(35,20)
 FIG_6 = figure(6);
 %[vert, fac] = voxel_image( r(1:N1,:), L_sub(1), [], [], [], [], 'heatmap', Q_total_subvol(1:N1).' ); % Absorber (T = 0 K)
 %[vert, fac] = voxel_image( r(N1+1:end,:), L_sub(1), [], [], [], [], 'heatmap', Q_total_subvol(N1+1:end).' ); % Emitter (T = 300 K)
-[vert, fac] = voxel_image( r_half_xy, L_sub(1), [], [], [], [], 'heatmap', Q_total_subvol_half_xy.', c_limits );
+[vert, fac] = voxel_image( r_half_xy, L_sub_vector(1), [], [], [], [], 'heatmap', Q_total_subvol_half_xy.', c_limits );
 %view(2)
 
 
@@ -461,21 +521,21 @@ FIG_6 = figure(6);
 FIG_7 = figure(7);
 %[vert, fac] = voxel_image( r(1:N1,:), L_sub(1), [], [], [], [], 'heatmap', Q_total_subvol(1:N1).' ); % Absorber (T = 0 K)
 %[vert, fac] = voxel_image( r(N1+1:end,:), L_sub(1), [], [], [], [], 'heatmap', Q_total_subvol(N1+1:end).' ); % Emitter (T = 300 K)
-[vert, fac] = voxel_image( r_slice_xy, L_sub(1), [], [], [], [], 'heatmap', Q_total_subvol_slice_xy.', c_limits );
+[vert, fac] = voxel_image( r_slice_xy, L_sub_vector(1), [], [], [], [], 'heatmap', Q_total_subvol_slice_xy.', c_limits );
 %view(2)
 
 % XZ-PLANE CUT: Subvolume heat map for half particles
 FIG_8 = figure(8);
 %[vert, fac] = voxel_image( r(1:N1,:), L_sub(1), [], [], [], [], 'heatmap', Q_total_subvol(1:N1).' ); % Absorber (T = 0 K)
 %[vert, fac] = voxel_image( r(N1+1:end,:), L_sub(1), [], [], [], [], 'heatmap', Q_total_subvol(N1+1:end).' ); % Emitter (T = 300 K)
-[vert, fac] = voxel_image( r_half_xz, L_sub(1), [], [], [], [], 'heatmap', Q_total_subvol_half_xz.', c_limits );
+[vert, fac] = voxel_image( r_half_xz, L_sub_vector(1), [], [], [], [], 'heatmap', Q_total_subvol_half_xz.', c_limits );
 %view(2)
 
 % XZ-PLANE CUT: Subvolume heat map for slices of particles
 FIG_9 = figure(9);
 %[vert, fac] = voxel_image( r(1:N1,:), L_sub(1), [], [], [], [], 'heatmap', Q_total_subvol(1:N1).' ); % Absorber (T = 0 K)
 %[vert, fac] = voxel_image( r(N1+1:end,:), L_sub(1), [], [], [], [], 'heatmap', Q_total_subvol(N1+1:end).' ); % Emitter (T = 300 K)
-[vert, fac] = voxel_image( r_slice_xz, L_sub(1), [], [], [], [], 'heatmap', Q_total_subvol_slice_xz.', c_limits );
+[vert, fac] = voxel_image( r_slice_xz, L_sub_vector(1), [], [], [], [], 'heatmap', Q_total_subvol_slice_xz.', c_limits );
 %view(2)
 
 % Save figure files
