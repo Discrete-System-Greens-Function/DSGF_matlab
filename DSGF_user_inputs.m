@@ -10,10 +10,10 @@
 clear, clc, close all
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%**************************START OF USER INPUTS**************************%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%**************************START OF USER INPUTS***************************%
 
-%******************DESCRIPTION******************%
+%*******************************DESCRIPTION*******************************%
 
 % Short description of system you are modeling (this will be used to name
 % the saved files)
@@ -21,7 +21,7 @@ clear, clc, close all
 description = '2spheres';
 
 
-%******************DISCRETIZATION OF EACH OBJECT******************%
+%**********************DISCRETIZATION OF EACH OBJECT**********************%
 % 
 % Options:
 %     'sphere_*'
@@ -35,7 +35,7 @@ description = '2spheres';
 discretization = ["sphere_8", "sphere_8"];
 
 
-%******************VOLUME OF EACH OBJECT******************%
+%**************************VOLUME OF EACH OBJECT**************************%
 
 % Characteriztic length (e.g., radius, side length, film thickness)
 L_char = [50e-9, 50e-9]; % [m]
@@ -45,7 +45,7 @@ volume = (4/3)*pi*(L_char.^3);  % [m^3]
 
 
 
-%******************ORIGIN OF EACH OBJECT******************%
+%**************************ORIGIN OF EACH OBJECT**************************%
 
 % Matrix containing Cartesian coordinates of the origin of each object.
 
@@ -53,7 +53,7 @@ origin = [0,0,0;
           110e-9, 0, 0]; % [m]
 
 
-%******************MATERIAL******************%
+%********************************MATERIAL*********************************%
 % Options:
 %     'SiO_2'
 %     'SiC'
@@ -63,19 +63,19 @@ origin = [0,0,0;
 material = Material.SiO_2;
 
 
-%******************TEMPERATURE OF EACH OBJECT******************%
+%***********************TEMPERATURE OF EACH OBJECT************************%
 
 T = [300, 800]; % [K]
 
 
-%******************TEMPERATURE FOR CONDUCTANCE CALCULATIONS******************%
+%****************TEMPERATURE FOR CONDUCTANCE CALCULATIONS*****************%
 
 % Temperature at which the spectral conductance will be calculated.
 
 T_cond = 300; % [K]
 
 
-%******************DIELECTRIC FUNCTION OF BACKGROUND******************%
+%********************DIELECTRIC FUNCTION OF BACKGROUND********************%
 
 % The dielectric function of the background reference medium must be purely
 % real-valued.
@@ -83,7 +83,7 @@ T_cond = 300; % [K]
 epsilon_ref = 1;
 
 
-%******************FREQUENCY DISCRETIZATION******************%
+%************************FREQUENCY DISCRETIZATION*************************%
 
 % Vector of angular frequencies at which simulations will be run.
 % Vector is of dimension (N_omega x 1)
@@ -94,7 +94,7 @@ c_0 = 299792458;            % Speed of light in vacuum [m/s]
 omega = (2*pi*c_0./lambda).'; % [rad/s]
 
 
-%******************OBSERVATION POINT (OPTIONAL)******************%
+%**********************OBSERVATION POINT (OPTIONAL)***********************%
 
 % Cartesian coordinates of observation point at which the LDOS will be
 % calculated
@@ -102,7 +102,7 @@ omega = (2*pi*c_0./lambda).'; % [rad/s]
 observation_point = [0,0,60e-9]; % [m]
 
 
-%******************DESIRED OUTPUTS******************%
+%*****************************DESIRED OUTPUTS*****************************%
 
 % Output the power dissipated in every subvolume?
 output.power_dissipated_subvol = true;
@@ -133,7 +133,7 @@ output.save_fig = true;
 output.save_workspace = true;
 
                            
-%**************************END OF USER INPUTS**************************%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%***************************END OF USER INPUTS****************************%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 DSGF_main(description, discretization, volume, origin, material, T, T_cond, epsilon_ref, omega, observation_point, output);
