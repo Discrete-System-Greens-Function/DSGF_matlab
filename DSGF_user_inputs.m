@@ -23,16 +23,31 @@ description = '2spheres';
 
 %**********************DISCRETIZATION OF EACH OBJECT**********************%
 % 
-% Options:
-%     'sphere_*'
-%     'cube_*'
-%     'thin_film_*'
-%     'dipole'
-%     'user_defined'
+% Define the discretization for each bulk object. Each bulk object needs 
+% its own discretization. The discretizations can be taken from the
+% pre-made samples or defined by the user.  
+%
+% If a pre-made sample is chosen, the number at the end of the chosen 
+% discretization represents the number of subvolumes in that 
+% discretization. 
+%
+% Pre-made sample discretization options:
+%     Discretization.sphere_*
+%     Discretization.cube_*
+%     Discretization.thin_film_*
+%     Discretization.dipole
+%
+% Example of sample discretization:
+%      discretization = {[DiscOption.sample, DiscOption.sample], Discretization.sphere_8, Discretization.sphere_8};
+%
+% If a user-defined input is chosen, the user-defined .txt file of the 
+% discretization should be stored in the directory 
+% Input_parameters/Discretizations/User_defined
+%
+% Example of user-defined discretization:
+%      discretization = {[DiscOption.user, DiscOption.user], "user_defined_discretization_1", "user_defined_discretization_2"}
 
-% each bulk object needs its own discretization
-
-discretization = ["sphere_8", "sphere_8"];
+discretization = {[DiscOption.sample, DiscOption.sample], Discretization.sphere_8, Discretization.sphere_8};
 
 
 %**************************VOLUME OF EACH OBJECT**************************%
