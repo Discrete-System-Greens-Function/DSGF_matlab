@@ -1,12 +1,10 @@
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Lindsay Walter, Livia Correa, Joseph McKay, Jan Cas
-% Discrete System Green's Function user inputs
-% Updated 5/23/22
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-% This code implements the Discrete System Green's Function (DSGF) approach
-% to model near-field radiative heat transfer between two objects.
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% DSGF: User Inputs
+%
+%
+% DESCRIPTION: This script should be edited with all user inputs for DSGF 
+%              simulations. 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Clear Workspace and close all figures
 clear, clc, close all
@@ -24,6 +22,7 @@ description = '2spheres';
 
 
 %******************DISCRETIZATION OF EACH OBJECT******************%
+% 
 % Options:
 %     'sphere_*'
 %     'cube_*'
