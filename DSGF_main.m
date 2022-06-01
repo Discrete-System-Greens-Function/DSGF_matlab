@@ -353,41 +353,8 @@ c_limits = [-abs_limit, abs_limit];
 
 %close all
 
-% Subvolume heat map for full particles (VIEW 1)
-FIG_4 = figure(4);
-%subplot(1,2,1)
-%[vert, fac] = voxel_image( r(1:N1,:), L_sub(1), [], [], [], [], 'heatmap', Q_total_subvol(1:N1).' ); % Absorber (T = 0 K)
-%[vert, fac] = voxel_image( r(N1+1:end,:), L_sub(1), [], [], [], [], 'heatmap', Q_total_subvol(N1+1:end).' ); % Emitter (T = 300 K)
-[vert, fac] = voxel_image( r, L_sub(1), [], [], [], [], 'heatmap', Q_total_subvol.', c_limits );
-xlabel('x-axis (m)');
-ylabel('y-axis (m)');
-zlabel('z-axis (m)');
-if ~show_axes
-    grid off
-    axis off
-    colorbar off
-end
-%view(2)
-view(-30,35)
-
-% Subvolume heat map for full particles (VIEW 2)
-FIG_5 = figure(5);
-%subplot(1,2,2)
-%[vert, fac] = voxel_image( r(1:N1,:), L_sub(1), [], [], [], [], 'heatmap', Q_total_subvol(1:N1).' ); % Absorber (T = 0 K)
-%[vert, fac] = voxel_image( r(N1+1:end,:), L_sub(1), [], [], [], [], 'heatmap', Q_total_subvol(N1+1:end).' ); % Emitter (T = 300 K)
-[vert, fac] = voxel_image( r, L_sub(1), [], [], [], [], 'heatmap', Q_total_subvol.', c_limits );
-xlabel('x-axis (m)');
-ylabel('y-axis (m)');
-zlabel('z-axis (m)');
-if ~show_axes
-    grid off
-    axis off
-    %cb = colorbar;
-    %colorbar('east')
-    %set(cb,'position',[0.2 0.2 .05 .5]) % [xposition yposition width height].
-    set(gca, 'fontsize', 30)
-end
-view(35,20)
+% plotting the subvolume heatmap in 2 seperate views
+subvol_heatmap(r, L_sub, Q_total_subvol, c_limits, show_axes, output, saveDir);
 
 %%
 % XY-PLANE CUT: Subvolume heat map for half particles
@@ -422,14 +389,10 @@ FIG_9 = figure(9);
 
 % Save figure files
 if output.save_fig
-    fig_path_4 = [saveDir '/' file_name_saved '_heatmap_full_view1.fig'];
-    fig_path_5 = [saveDir '/' file_name_saved '_heatmap_full_view2.fig'];
     fig_path_6 = [saveDir '/' file_name_saved '_heatmap_xy_half.fig'];
     fig_path_7 = [saveDir '/' file_name_saved '_heatmap_xy_slice.fig'];
     fig_path_8 = [saveDir '/' file_name_saved '_heatmap_xz_half.fig'];
     fig_path_9 = [saveDir '/' file_name_saved '_heatmap_xz_slice.fig'];
-    saveas(FIG_4, fig_path_4)
-    saveas(FIG_5, fig_path_5)
     saveas(FIG_6, fig_path_6)
     saveas(FIG_7, fig_path_7)
     saveas(FIG_8, fig_path_8)
