@@ -27,8 +27,11 @@ description = '2spheres';
 % its own discretization. The discretizations can be taken from the
 % pre-made samples or defined by the user.  
 %
-% If a pre-made sample is chosen, the number at the end of the chosen 
-% discretization represents the number of subvolumes in that 
+% If a pre-made sample is chosen, the user can choose the discretization 
+% from a list of pre-defined files. Files are included for spheres, cubes,
+% and thin films with variable number of subvolumes and for diples defined
+% by a single subvolume.  The number at the end of the chosen 
+% discretization represents the number of subvolumes in that
 % discretization. 
 %
 % Pre-made sample discretization options:
@@ -37,17 +40,25 @@ description = '2spheres';
 %     Discretization.thin_film_*
 %     Discretization.dipole
 %
-% Example of sample discretization:
-%      discretization = {[DiscOption.sample, DiscOption.sample], Discretization.sphere_8, Discretization.sphere_8};
+% Example with two sample discretizations chosen:
+%      discretization = {Discretization.sphere_8, Discretization.sphere_8};
 %
 % If a user-defined input is chosen, the user-defined .txt file of the 
 % discretization should be stored in the directory 
-% Input_parameters/Discretizations/User_defined
+% Input_parameters/Discretizations/User_defined.  The inputs are then
+% strings of the file name of the user-defined discretization.
 %
-% Example of user-defined discretization:
-%      discretization = {[DiscOption.user, DiscOption.user], "user_defined_discretization_1", "user_defined_discretization_2"}
+% Example of two user-defined discretizations:
+%      discretization = {"user_defined_discretization_1", "user_defined_discretization_2"}
+%
+% Sample discretizations and user-defined discretizations can be
+% mixed-and-matched.
+%
+% Example of one sample discretization and one user-defined discretization
+%      discretization = {Discretization.sphere_8 "user_defined_discretization_2"}
+%
 
-discretization = {[DiscOption.sample, DiscOption.sample], Discretization.sphere_8, Discretization.sphere_8};
+discretization = {Discretization.sphere_8, Discretization.sphere_8};
 
 
 %**************************VOLUME OF EACH OBJECT**************************%
