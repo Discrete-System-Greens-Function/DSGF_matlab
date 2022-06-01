@@ -66,9 +66,6 @@ discretization = {Discretization.sphere_8, Discretization.sphere_8};
 % Characteriztic length (e.g., radius, side length, film thickness)
 L_char = [50e-9, 50e-9]; % [m]
 
-% Volume 
-volume = (4/3)*pi*(L_char.^3);  % [m^3]
-
 
 
 %**************************ORIGIN OF EACH OBJECT**************************%
@@ -162,4 +159,4 @@ output.save_workspace = true;
 %***************************END OF USER INPUTS****************************%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-DSGF_main(description, discretization, volume, origin, material, T, T_cond, epsilon_ref, omega, observation_point, output);
+DSGF_main(description, discretization, L_char, origin, material, T, T_cond, epsilon_ref, omega, observation_point, output);
