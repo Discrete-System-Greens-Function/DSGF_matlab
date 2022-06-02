@@ -45,33 +45,7 @@ constants.c_0 = 299792458;            % Speed of light in vacuum [m/s]
 % Set results export %
 %%%%%%%%%%%%%%%%%%%%%%
 
-% Set time stamp
-time_stamp = datestr(now,'yyyy-mm-dd_HH-MM-SS');
-
-% Directory where results files will be saved (string)
-saveDir = sprintf('Results_%s', time_stamp);  % Folder name.
-if not(isfolder(saveDir)) % If the results directory doesn't exist, create it.
-    mkdir(saveDir)
-end
-
-% Make new directory where DSGF matrix files will be saved
-if output.DSGF_matrix
-    mkdir(saveDir, 'DSGF_matrices')
-end
-
-% Make new directory where transmission coefficient matrix files will be saved
-if output.transmission_coefficient_matrix
-    mkdir(saveDir, 'Trans_matrices')
-end
-
-% File paths where different results will be saved
-filePath_main = [saveDir];
-filePath_DSGF = [saveDir '/' 'DSGF_matrices'];
-filePath_Trans = [saveDir '/' 'Trans_matrices'];
-
-% File name of .mat saved variables
-file_name_saved = ['results_' description '_' time_stamp]; % File name where results will be saved
-
+[filePath_st, file_name_saved] = result_setup(output, description);
 
 %%%%%%%%%%%%%%%%%%
 % Figure options %
@@ -201,14 +175,11 @@ T_vector = [T(1).*ones(N_each_object(1),1); T(2).*ones(N_each_object(2),1)];
 % Plot discretization %
 %%%%%%%%%%%%%%%%%%%%%%%
 
-discretization_plotting(r, L_sub_vector, N, show_axes, output, saveDir);
+discretization_plotting(r, L_sub_vector, N, show_axes, output, filePath_st.main);
 
 
 % % String name describing simulation geometry
 % simulation_geometry = [description '_R' num2str((1e9)*radius_1) 'nm_R' num2str((1e9)*radius_2) 'nm_dc' num2str((1e9)*d_center) 'nm_N' num2str(N1 + N2)];
-% 
-% % Update file name of .mat saved variables
-% file_name_saved = ['results_' simulation_geometry '_' time_stamp]
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -242,7 +213,7 @@ end
 % Plot dielectric function %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-dielectric_function_plotting(omega, epsilon, material, N_omega, output, saveDir);
+dielectric_function_plotting(omega, epsilon, material, N_omega, output, filePath_st.main);
 
 %****************END CALCULATION OF DIELECTRIC FUNCTION*******************%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -322,7 +293,7 @@ for omega_loop = 1:N_omega % Loop through all frequencies
     
     % Save all workspace variables
     if output.save_workspace
-        save([saveDir, '/', file_name_saved])
+        save([filePath_st.main, '/', file_name_saved])
     end
 
     % Export DSGF matrix for this frequency loop
@@ -331,7 +302,7 @@ for omega_loop = 1:N_omega % Loop through all frequencies
         fileName_DSGF = ['DSGFmatrix_omega' num2str(omega_loop)];
         t2 = toc;
         % Export DSGF matrix
-        writematrix(G_sys_2D, [filePath_DSGF, '/', fileName_DSGF, '.csv']);
+        writematrix(G_sys_2D, [filePath_st.DSGF, '/', fileName_DSGF, '.csv']);
         t3 = toc;
         disp(['Time to save DSGF matrix as a .csv file  = ' num2str(t3-t2) ' s = ' num2str((t2-t1)/60) ' minutes'])
     end % End save DSGF matrix for this frequency loop
@@ -344,8 +315,8 @@ for omega_loop = 1:N_omega % Loop through all frequencies
 
         t4 = toc;
         % Export spectral transmission coefficient matrix
-        writematrix(Trans, [filePath_Trans, '/', fileName_Trans, '.csv']);
-        %save(filePath_Trans, 'omega', 'Trans_12_omega_DSGF')
+        writematrix(Trans, [filePath_st.Trans, '/', fileName_Trans, '.csv']);
+        %save(filePath_st.Trans, 'omega', 'Trans_12_omega_DSGF')
         t5 = toc;
         disp(['Time to save transmission coefficient matrix as a .csv file  = ' num2str(t5-t4) ' s = ' num2str((t4-t3)/60) ' minutes'])
     end
@@ -382,7 +353,7 @@ end % End loop through all frequencies
 % Plot heat maps %
 %%%%%%%%%%%%%%%%%%
 
-subvol_heatmap_plotting(r, L_sub_vector, Q_total_subvol, show_axes, output, saveDir);
+subvol_heatmap_plotting(r, L_sub_vector, Q_total_subvol, show_axes, output, filePath_st.main);
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -395,7 +366,7 @@ if output.conductance
 
     [ G_omega_bulk_12, G_bulk_12 ] = conductance_bulk( Trans_omega_12, T_conductance, omega );
 
-	spectral_conductance_plot(omega, G_omega_bulk_12, output, saveDir);
+	spectral_conductance_plot(omega, G_omega_bulk_12, output, filePath_st.main);
 
 end % End conductance calculations
 
@@ -406,7 +377,7 @@ end % End conductance calculations
 
 % Save all workspace variables
 if output.save_workspace
-    save([saveDir, '/', file_name_saved])
+    save([filePath_st.main, '/', file_name_saved])
 end
 
 
