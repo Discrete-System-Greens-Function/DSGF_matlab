@@ -71,35 +71,7 @@ convergence_analysis = true;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %****************************DISCRETIZATION*******************************%
 
-% Number of bulk objects
-N_bulk = length(discretization);
-
-% Determine file structure of bulk object discretization and extract
-% discretization information.
-N_each_object = zeros(N_bulk,1);       % Preallocate
-volume = zeros(N_bulk,1);              % Preallocate
-r_each_object = cell(N_bulk,1);        % Preallocate
-ind_bulk = 2.^[0:N_bulk];            % Preallocate
-delta_V_each_object = cell(N_bulk,1);  % Preallocate
-L_sub_each_object = cell(N_bulk,1);    % Preallocate
-for ii = 1:N_bulk % Loop through all bulk objects
-    if isenum(discretization{ii}) % Sample discretization is specified
-
-	[r_each_object{ii}, N_each_object(ii), delta_V_each_object{ii}, L_sub_each_object{ii}, volume(ii)] = read_sample_discretization(discretization{ii}, L_char(ii));
-
-    else % User-defined discretization is specified
-
-	[r_each_object{ii}, N_each_object(ii), delta_V_each_object{ii}, L_sub_each_object{ii}] = read_user_discretization(discretization{ii}, L_char(ii));
-
-    end % End if sample or user-defined discretization
-
-    % Move the center-of-mass of each object to the origin [0,0,0]
-    r_each_object{ii} = center_of_mass(r_each_object{ii});
-
-    % Move each discretization to its user-specified origin
-    r_each_object{ii} = r_each_object{ii} + repmat(origin(ii,:), N_each_object(ii), 1);
-
-end % End loop through bulk objects
+[N_each_object, volume, r_each_object, ind_bulk, delta_V_each_object, L_sub_each_object] = read_discretization(discretization, L_char, origin);
 
 % Discretized lattice including subvolumes of all objects in one matrix (N x 3 matrix)
 r = cell2mat(r_each_object);
