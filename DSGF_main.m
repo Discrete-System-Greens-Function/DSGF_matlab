@@ -79,7 +79,7 @@ N_bulk = length(discretization);
 N_each_object = zeros(N_bulk,1);       % Preallocate
 volume = zeros(N_bulk,1);              % Preallocate
 r_each_object = cell(N_bulk,1);        % Preallocate
-ind_bulk = zeros(N_bulk,1);            % Preallocate
+ind_bulk = 2.^[0:N_bulk];            % Preallocate
 delta_V_each_object = cell(N_bulk,1);  % Preallocate
 L_sub_each_object = cell(N_bulk,1);    % Preallocate
 for ii = 1:N_bulk % Loop through all bulk objects
@@ -92,7 +92,7 @@ for ii = 1:N_bulk % Loop through all bulk objects
         r_each_object{ii} = xlsread(append(append(append(discDir, '/'), discFile), '.xlsx'));
 
         % Bulk object start index (this MUST come before N_vector(ii) is updated).
-        ind_bulk(ii) = sum(ind_bulk(1:ii)) + 1;
+        % ind_bulk(ii) = sum(ind_bulk(1:ii)) + 1;
 
         % Number of subvolumes in each bulk object
         [N_each_object(ii),~] = size(r_each_object{ii});
@@ -127,7 +127,7 @@ for ii = 1:N_bulk % Loop through all bulk objects
         r_each_object{ii} = L_char(ii).*r_each_object{ii};
 
         % Bulk object start index (this MUST come before N_vector(ii) is updated).
-        ind_bulk(ii) = sum(ind_bulk(1:ii)) + 1;
+        %ind_bulk(ii) = sum(ind_bulk(1:ii)) + 1;
 
         % Number of subvolumes in each bulk object
         [N_each_object(ii),~] = size(r_each_object{ii});
