@@ -84,37 +84,8 @@ delta_V_each_object = cell(N_bulk,1);  % Preallocate
 L_sub_each_object = cell(N_bulk,1);    % Preallocate
 for ii = 1:N_bulk % Loop through all bulk objects
     if isenum(discretization{ii}) % Sample discretization is specified
-        discFile = string(discretization{ii});       % File name of discretization
-        geometry = extractBefore(discFile, '_');     % Geometry of bulk object
-        discDir = append('Input_parameters/Discretizations/', geometry); % Directory where discretization is stored
 
-        % Import unscaled discretization of each object
-        r_each_object{ii} = xlsread(append(append(append(discDir, '/'), discFile), '.xlsx'));
-
-        % Bulk object start index (this MUST come before N_vector(ii) is updated).
-        % ind_bulk(ii) = sum(ind_bulk(1:ii)) + 1;
-
-        % Number of subvolumes in each bulk object
-        [N_each_object(ii),~] = size(r_each_object{ii});
-
-        % Scale sample discretizations based on the geometry
-        switch (geometry)
-            case "sphere"
-                volume(ii) = (4/3)*pi*(L_char(ii).^3);  % Volume of sphere [m^3]
-            case "cube"
-                volume(ii) = (L_char(ii).^3);           % Volume of cube [m^3]
-            case "thin_film"
-
-            case "dipole"
-                volume(ii) = (4/3)*pi*(L_char(ii).^3);  % Volume of spherical dipole [m^3]
-        end % End switch-case through geometries
-
-        % Subvolume size for each object (uniform discretization)
-        delta_V_each_object{ii} = ones(N_each_object(ii), 1).*(volume(ii)/N_each_object(ii)); % Volume of subvolumes in each object (uniform discretization)
-        L_sub_each_object{ii} = delta_V_each_object{ii}.^(1/3);  % Length of side of a cubic subvolume in each object (uniform discretization)
-
-        % Scale discretization
-        r_each_object{ii} = L_sub_each_object{ii}(1).*r_each_object{ii};
+	[r_each_object{ii}, N_each_object(ii), delta_V_each_object{ii}, L_sub_each_object{ii}, volume(ii)] = read_sample_discretization(discretization{ii}, L_char(ii));
 
     else % User-defined discretization is specified
         discFile = discretization{ii}; % File name of discretization
@@ -125,9 +96,6 @@ for ii = 1:N_bulk % Loop through all bulk objects
 
         % Scale discretization
         r_each_object{ii} = L_char(ii).*r_each_object{ii};
-
-        % Bulk object start index (this MUST come before N_vector(ii) is updated).
-        %ind_bulk(ii) = sum(ind_bulk(1:ii)) + 1;
 
         % Number of subvolumes in each bulk object
         [N_each_object(ii),~] = size(r_each_object{ii});
