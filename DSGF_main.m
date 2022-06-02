@@ -201,48 +201,7 @@ T_vector = [T(1).*ones(N_each_object(1),1); T(2).*ones(N_each_object(2),1)];
 % Plot discretization %
 %%%%%%%%%%%%%%%%%%%%%%%
 
-% UPDATE FOR OBJECTS WITH INDEPENDENT (BUT UNIFORM) SUBVOLUME SIZES!
-% Plot voxel image of discretization
-FIG_voxel = figure(1);
-[vert, fac] = voxel_image( r, L_sub_vector(1), [], [], [], [], 'on', [], [] );
-xlabel('x-axis (m)');
-ylabel('y-axis (m)');
-zlabel('z-axis (m)');
-if ~show_axes
-    grid off
-    axis off
-    set(gca, 'fontsize', 30)
-end
-view(5,20)
-
-% Visualize discretized lattice
-FIG_discretization = figure(2);
-plot3(r(:,1), r(:,2), r(:,3), 'x')
-title(['Location of each subvolume for N = ', num2str(N), ' total subvolumes'], 'fontsize', 14)
-xlabel('x-axis [m]')
-ylabel('y-axis [m]')
-zlabel('z-axis [m]')
-grid on
-if ~show_axes
-    grid off
-    axis off
-    set(gca, 'fontsize', 30)
-end
-set(gca,'DataAspectRatio',[1 1 1])
-view(3)
-
-
-% Save discretization figure file
-if output.save_fig
-    fig_path_dielectricFunction = [saveDir '/voxel.fig'];
-    saveas(FIG_voxel, fig_path_dielectricFunction)
-    clear FIG_voxel % Remove previous plot handles
-
-    fig_path_discretization = [saveDir '/discretization.fig'];
-    saveas(FIG_discretization, fig_path_discretization)
-    clear FIG_discretization % Remove previous plot handles
-end
-
+discretization_plotting(r, L_sub_vector, N, show_axes, output, saveDir);
 
 
 % % String name describing simulation geometry
@@ -250,7 +209,6 @@ end
 % 
 % % Update file name of .mat saved variables
 % file_name_saved = ['results_' simulation_geometry '_' time_stamp]
-
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -284,23 +242,7 @@ end
 % Plot dielectric function %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-FIG_dielectric_function = figure(3);
-plot(omega, real(epsilon), 'x-', omega, imag(epsilon), 'o--', 'linewidth', 2)
-xlabel('Frequency [rad/s]', 'fontsize', 12)
-ylabel('Dielectric function, \epsilon', 'fontsize', 12)
-title(['Dielectric function of ' string(material) ', N_o_m_e_g_a = ' num2str(N_omega)], 'fontsize', 16)
-legend('Real part', 'Imaginary part', 'location', 'best')
-set(gca, 'fontsize', 16)
-axis tight
-grid on
-
-% Save dielectric function figure file
-if output.save_fig
-    fig_path_dielectricFunction = [saveDir '/dielectric_function.fig'];
-    saveas(FIG_dielectric_function, fig_path_dielectricFunction)
-    clear FIG_dielectric_function % Remove previous plot handles
-end
-
+dielectric_function_plotting(omega, epsilon, material, N_omega, output, saveDir);
 
 %****************END CALCULATION OF DIELECTRIC FUNCTION*******************%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -434,129 +376,13 @@ end % End loop through all frequencies
 
 [Q_total_subvol, Q_density_subvol, Q_total_subvol_matrix] = total_heat_dissipation_in_subvol(N, omega, Q_omega_subvol, delta_V_vector, r);
 
+
 %% 
 %%%%%%%%%%%%%%%%%%
 % Plot heat maps %
 %%%%%%%%%%%%%%%%%%
 
-% XY-PLANE CUT: Find locations and indices for particle halves cut down the middle (cut along the xy-plane)
-r_z_avg = (max(r(:,3)) + min(r(:,3)))/2;
-ind_half_xy = find(r(:,3) >= r_z_avg);
-r_half_xy = r(ind_half_xy, :);
-Q_total_subvol_half_xy = Q_total_subvol(ind_half_xy);
-
-% XZ-PLANE CUT: Find locations and indices for particle halves cut down the middle (cut along the xz-plane)
-r_y_avg = (max(r(:,2)) + min(r(:,2)))/2;
-ind_half_xz = find(r(:,2) >= r_y_avg);
-r_half_xz = r(ind_half_xz, :);
-Q_total_subvol_half_xz = Q_total_subvol(ind_half_xz);
-
-% XY-PLANE CUT: Find locations and indices of a single slice (one subvolume thick)
-ind_slice_xy = find((r(:,3) >= r_z_avg) & (r(:,3) <= r_z_avg + L_sub_vector(1)));
-r_slice_xy = r(ind_slice_xy, :);
-Q_total_subvol_slice_xy = Q_total_subvol(ind_slice_xy);
-
-% XZ-PLANE CUT: Find locations and indices of a single slice (one subvolume thick)
-ind_slice_xz = find((r(:,2) >= r_y_avg) & (r(:,2) <= r_y_avg + L_sub_vector(1)));
-r_slice_xz = r(ind_slice_xz, :);
-Q_total_subvol_slice_xz = Q_total_subvol(ind_slice_xz);
-
-% Set heatmap color axis limits
-abs_limit = max(abs(Q_total_subvol));
-c_limits = [-abs_limit, abs_limit];
-%c_limits = [min(Q_total_subvol), max(Q_total_subvol)];
-
-
-%%
-
-%close all
-
-% Subvolume heat map for full particles (VIEW 1)
-FIG_4 = figure(4);
-%subplot(1,2,1)
-%[vert, fac] = voxel_image( r(1:N1,:), L_sub(1), [], [], [], [], 'heatmap', Q_total_subvol(1:N1).' ); % Absorber (T = 0 K)
-%[vert, fac] = voxel_image( r(N1+1:end,:), L_sub(1), [], [], [], [], 'heatmap', Q_total_subvol(N1+1:end).' ); % Emitter (T = 300 K)
-[vert, fac] = voxel_image( r, L_sub_vector(1), [], [], [], [], 'heatmap', Q_total_subvol.', c_limits );
-xlabel('x-axis (m)');
-ylabel('y-axis (m)');
-zlabel('z-axis (m)');
-if ~show_axes
-    grid off
-    axis off
-    colorbar off
-end
-%view(2)
-view(-30,35)
-
-% Subvolume heat map for full particles (VIEW 2)
-FIG_5 = figure(5);
-%subplot(1,2,2)
-%[vert, fac] = voxel_image( r(1:N1,:), L_sub(1), [], [], [], [], 'heatmap', Q_total_subvol(1:N1).' ); % Absorber (T = 0 K)
-%[vert, fac] = voxel_image( r(N1+1:end,:), L_sub(1), [], [], [], [], 'heatmap', Q_total_subvol(N1+1:end).' ); % Emitter (T = 300 K)
-[vert, fac] = voxel_image( r, L_sub_vector(1), [], [], [], [], 'heatmap', Q_total_subvol.', c_limits );
-xlabel('x-axis (m)');
-ylabel('y-axis (m)');
-zlabel('z-axis (m)');
-if ~show_axes
-    grid off
-    axis off
-    %cb = colorbar;
-    %colorbar('east')
-    %set(cb,'position',[0.2 0.2 .05 .5]) % [xposition yposition width height].
-    set(gca, 'fontsize', 30)
-end
-view(35,20)
-
-%%
-% XY-PLANE CUT: Subvolume heat map for half particles
-FIG_6 = figure(6);
-%[vert, fac] = voxel_image( r(1:N1,:), L_sub(1), [], [], [], [], 'heatmap', Q_total_subvol(1:N1).' ); % Absorber (T = 0 K)
-%[vert, fac] = voxel_image( r(N1+1:end,:), L_sub(1), [], [], [], [], 'heatmap', Q_total_subvol(N1+1:end).' ); % Emitter (T = 300 K)
-[vert, fac] = voxel_image( r_half_xy, L_sub_vector(1), [], [], [], [], 'heatmap', Q_total_subvol_half_xy.', c_limits );
-%view(2)
-
-
-
-% XY-PLANE CUT: Subvolume heat map for slices of particles
-FIG_7 = figure(7);
-%[vert, fac] = voxel_image( r(1:N1,:), L_sub(1), [], [], [], [], 'heatmap', Q_total_subvol(1:N1).' ); % Absorber (T = 0 K)
-%[vert, fac] = voxel_image( r(N1+1:end,:), L_sub(1), [], [], [], [], 'heatmap', Q_total_subvol(N1+1:end).' ); % Emitter (T = 300 K)
-[vert, fac] = voxel_image( r_slice_xy, L_sub_vector(1), [], [], [], [], 'heatmap', Q_total_subvol_slice_xy.', c_limits );
-%view(2)
-
-% XZ-PLANE CUT: Subvolume heat map for half particles
-FIG_8 = figure(8);
-%[vert, fac] = voxel_image( r(1:N1,:), L_sub(1), [], [], [], [], 'heatmap', Q_total_subvol(1:N1).' ); % Absorber (T = 0 K)
-%[vert, fac] = voxel_image( r(N1+1:end,:), L_sub(1), [], [], [], [], 'heatmap', Q_total_subvol(N1+1:end).' ); % Emitter (T = 300 K)
-[vert, fac] = voxel_image( r_half_xz, L_sub_vector(1), [], [], [], [], 'heatmap', Q_total_subvol_half_xz.', c_limits );
-%view(2)
-
-% XZ-PLANE CUT: Subvolume heat map for slices of particles
-FIG_9 = figure(9);
-%[vert, fac] = voxel_image( r(1:N1,:), L_sub(1), [], [], [], [], 'heatmap', Q_total_subvol(1:N1).' ); % Absorber (T = 0 K)
-%[vert, fac] = voxel_image( r(N1+1:end,:), L_sub(1), [], [], [], [], 'heatmap', Q_total_subvol(N1+1:end).' ); % Emitter (T = 300 K)
-[vert, fac] = voxel_image( r_slice_xz, L_sub_vector(1), [], [], [], [], 'heatmap', Q_total_subvol_slice_xz.', c_limits );
-%view(2)
-
-% Save figure files
-if output.save_fig
-    fig_path_4 = [saveDir '/' file_name_saved '_heatmap_full_view1.fig'];
-    fig_path_5 = [saveDir '/' file_name_saved '_heatmap_full_view2.fig'];
-    fig_path_6 = [saveDir '/' file_name_saved '_heatmap_xy_half.fig'];
-    fig_path_7 = [saveDir '/' file_name_saved '_heatmap_xy_slice.fig'];
-    fig_path_8 = [saveDir '/' file_name_saved '_heatmap_xz_half.fig'];
-    fig_path_9 = [saveDir '/' file_name_saved '_heatmap_xz_slice.fig'];
-    saveas(FIG_4, fig_path_4)
-    saveas(FIG_5, fig_path_5)
-    saveas(FIG_6, fig_path_6)
-    saveas(FIG_7, fig_path_7)
-    saveas(FIG_8, fig_path_8)
-    saveas(FIG_9, fig_path_9)
-end
-
-
-
-%%
+subvol_heatmap_plotting(r, L_sub_vector, Q_total_subvol, show_axes, output, saveDir);
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -569,25 +395,7 @@ if output.conductance
 
     [ G_omega_bulk_12, G_bulk_12 ] = conductance_bulk( Trans_omega_12, T_conductance, omega );
 
-
-    % Plot spectral conductance vs. frequency
-    FIG_10 = figure(10);
-    semilogy(omega, G_omega_bulk_12, '-x', 'linewidth', 2)
-    %plot(E_eV, G_omega_eV.', '-x', 'linewidth', 2)
-    xlabel('Frequency [rad/s]')
-    ylabel('Spectral conductance, G_\omega  [WK^-^1(rad/s)^-^1]', 'fontsize', 12)
-%     title([material ', ' geometry ', R_1 = ' num2str(radius_1*(10^9)) 'nm, R_2 = ' num2str(radius_2*(10^9)) 'nm, d_c = '...
-%         num2str(d_center*(10^9)) 'nm, ' num2str(N_omega) ' frequencies, N = ' num2str(N) ' total subvolumes'], 'fontsize', 16)
-    axis tight
-    set(gca, 'fontsize', 22)
-    %legend([num2str(N(1)/2) ' subvolumes'], 'location', 'best')
-    grid on
-
-    % Save figure files
-    if output.save_fig
-        fig_path_10 = [saveDir '/' file_name_saved '_spectralConductance.fig'];
-        saveas(FIG_10, fig_path_10)
-    end
+	spectral_conductance_plot(omega, G_omega_bulk_12, output, saveDir);
 
 end % End conductance calculations
 
@@ -598,7 +406,6 @@ end % End conductance calculations
 
 % Save all workspace variables
 if output.save_workspace
-    clear FIG_4 FIG_5 FIG_6 FIG_7 FIG_8 FIG_9 FIG_10 FIG_voxel
     save([saveDir, '/', file_name_saved])
 end
 
