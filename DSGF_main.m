@@ -88,22 +88,8 @@ for ii = 1:N_bulk % Loop through all bulk objects
 	[r_each_object{ii}, N_each_object(ii), delta_V_each_object{ii}, L_sub_each_object{ii}, volume(ii)] = read_sample_discretization(discretization{ii}, L_char(ii));
 
     else % User-defined discretization is specified
-        discFile = discretization{ii}; % File name of discretization
-        discDir = "Input_parameters/Discretizations/User_defined"; % Directory where discretization is stored
 
-        % Import unscaled discretization of each object
-        r_each_object{ii} = readmatrix(append(append(append(discDir, '/'), discFile), '.txt'));
-
-        % Scale discretization
-        r_each_object{ii} = L_char(ii).*r_each_object{ii};
-
-        % Number of subvolumes in each bulk object
-        [N_each_object(ii),~] = size(r_each_object{ii});
-
-        % Subvolume size for each object (uniform discretization)
-        [L_sub, delta_V] = calculate_Lsub_uniform(r_each_object{ii});
-        delta_V_each_object{ii} = ones(N_each_object(ii), 1).*delta_V; % Volume of subvolumes in each object (uniform discretization)
-        L_sub_each_object{ii} = ones(N_each_object(ii), 1).*L_sub;     % Length of side of a cubic subvolume in each object (uniform discretization)
+	[r_each_object{ii}, N_each_object(ii), delta_V_each_object{ii}, L_sub_each_object{ii}] = read_user_discretization(discretization{ii}, L_char(ii));
 
     end % End if sample or user-defined discretization
 
