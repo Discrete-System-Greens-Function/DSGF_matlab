@@ -226,11 +226,7 @@ for omega_loop = 1:N_omega % Loop through all frequencies
     if output.DSGF_matrix
         % File name where results will be saved (based on what frequency band is chosen)
         fileName_DSGF = ['DSGFmatrix_omega' num2str(omega_loop)];
-        t2 = toc;
-        % Export DSGF matrix
-        writematrix(G_sys_2D, [filePath_st.DSGF, '/', fileName_DSGF, '.csv']);
-        t3 = toc;
-        disp(['Time to save DSGF matrix as a .csv file  = ' num2str(t3-t2) ' s = ' num2str((t2-t1)/60) ' minutes'])
+	save_matrix(fileName_DSGF, G_sys_2D, [filePath_st.DSGF, '/', fileName_DSGF, '.csv'], 'DSGF')
     end % End save DSGF matrix for this frequency loop
 
 
@@ -239,12 +235,8 @@ for omega_loop = 1:N_omega % Loop through all frequencies
         % File name where results will be saved (based on what frequency band is chosen)
         fileName_Trans = ['TransMatrix_omega' num2str(omega_loop)];
 
-        t4 = toc;
-        % Export spectral transmission coefficient matrix
-        writematrix(Trans, [filePath_st.Trans, '/', fileName_Trans, '.csv']);
-        %save(filePath_st.Trans, 'omega', 'Trans_12_omega_DSGF')
-        t5 = toc;
-        disp(['Time to save transmission coefficient matrix as a .csv file  = ' num2str(t5-t4) ' s = ' num2str((t4-t3)/60) ' minutes'])
+	save_matrix(fileName_Trans, Trans, [filePath_st.Trans, '/', fileName_Trans, '.csv'], 'transmission coefficient')
+
     end
 
 
