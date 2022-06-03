@@ -298,14 +298,6 @@ end
 % Print status to Command Window %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% Print out workspace memory required
-vars = struct2cell(whos);
-workspaceMem = sum(cell2mat(vars(3,:)))/1e9;
-disp('----------------------------------------------------------------')
-disp(['Workspace memory required is ', num2str(workspaceMem), ' GB'])
-disp('')
-disp('----------------------------------------------------------------')
-%memory
-
+display_memory_consumption(struct2cell(whos));
 
 end % End function
