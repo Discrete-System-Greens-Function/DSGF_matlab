@@ -59,9 +59,9 @@ description = '2spheres';
 %      discretization = {Discretization.sphere_8 "user_defined_discretization_2"}
 %
 
-%discretization = {Discretization.sphere_8, Discretization.sphere_8};
+discretization = {Discretization.sphere_8, Discretization.sphere_8};
 %discretization = {Discretization.sphere_8, "Gaussian_sphere_sigma0-2_rng9_N7399"};
-discretization = {"Gaussian_sphere_sigma0-2_rng9_N7399", "Gaussian_sphere_sigma0-2_rng9_N7399"};
+%discretization = {"Gaussian_sphere_sigma0-2_rng9_N7399", "Gaussian_sphere_sigma0-2_rng9_N7399"};
 
 
 %****************************SCALE EACH OBJECT****************************%

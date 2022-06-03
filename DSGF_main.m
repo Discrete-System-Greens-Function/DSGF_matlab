@@ -217,11 +217,6 @@ for omega_loop = 1:N_omega % Loop through all frequencies
     % Save results %
     %%%%%%%%%%%%%%%%
     
-    % Save all workspace variables
-    if output.save_workspace
-        save([filePath_st.main, '/', file_name_saved])
-    end
-
     % Export DSGF matrix for this frequency loop
     if output.DSGF_matrix
         % File name where results will be saved (based on what frequency band is chosen)
