@@ -1,14 +1,14 @@
 function [omega] = even_omega(start_lambda, end_lambda, N_omega)
-% calculates an even omega vector based on the beginning and ending wavelength
+% calculates a uniformly discretized vector of angular frequencies for a given range of vacuum wavelengths
 % and how many elements it should have
 % 
 %	Inputs:
-%		start_lambda - beginning wavelength
-%		end_lambda - end wavelength
-%		N_omega - number of evenly spaced angular velcoties
+%		start_lambda - beginning wavelength [m]
+%		end_lambda - end wavelength [m]
+%		N_omega - number of evenly spaced angular frequencies
 %
 %	Outputs:
-%		omega - angular frequency vector
+%		omega - angular frequency vector [rad/s]
 %
 
 	lambda = linspace(start_lambda, end_lambda, N_omega); % [m]
