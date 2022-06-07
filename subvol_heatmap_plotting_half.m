@@ -27,11 +27,11 @@ function subvol_heatmap_plotting_half(r_st, L_sub, Q_total_subvol_st, c_limits, 
 
 	% Save figure files
 	if output.save_fig
-	    heatmap_xy_half_path = [saveDir '/heatmap_xy_half.fig'];
-	    heatmap_xz_half_path = [saveDir '/heatmap_xz_half.fig'];
+	    heatmap_xy_half_path = [saveDir '/heatmap_xy_half'];
+	    heatmap_xz_half_path = [saveDir '/heatmap_xz_half'];
 
-	    saveas(heatmap_xy_half_fig, heatmap_xy_half_path)
-	    saveas(heatmap_xz_half_fig, heatmap_xz_half_path)
+	    saveas(heatmap_xy_half_fig, heatmap_xy_half_path, string(output.figure_format))
+	    saveas(heatmap_xz_half_fig, heatmap_xz_half_path, string(output.figure_format))
 
 	end
 

@@ -193,13 +193,15 @@ for omega_loop = 1:N_omega % Loop through all frequencies
     % Record time at start of frequency loop
     t1 = toc;
     
-    if calc_approach == CalculationOption.direct
+    switch calc_approach
+	    
+	    case CalculationOption.direct
         
-        [ G_sys_2D, Trans, Q_omega_bulk(omega_loop, :), Q_omega_subvol(omega_loop, :) ] = direct_function(omega(omega_loop), r, epsilon(omega_loop)*ones(N,1), epsilon_ref, delta_V_vector, T_vector, ind_bulk);
+		[ G_sys_2D, Trans, Q_omega_bulk(omega_loop, :), Q_omega_subvol(omega_loop, :) ] = direct_function(omega(omega_loop), r, epsilon(omega_loop)*ones(N,1), epsilon_ref, delta_V_vector, T_vector, ind_bulk);
         
-    elseif calc_approach == CalculationOption.iterative
+	     case CalculationOption.iterative
         
-        % THIS IS STILL UNDER CONSTUCTION
+			% THIS IS STILL UNDER CONSTUCTION
         
     end % End direct vs. iterative approach
     
@@ -216,30 +218,8 @@ for omega_loop = 1:N_omega % Loop through all frequencies
     %%%%%%%%%%%%%%%%
     % Save results %
     %%%%%%%%%%%%%%%%
-    
-    % Save all workspace variables
-    if output.save_workspace
-        save([filePath_st.main, '/', file_name_saved])
-    end
 
-    % Export DSGF matrix for this frequency loop
-    if output.DSGF_matrix
-        % File name where results will be saved (based on what frequency band is chosen)
-        fileName_DSGF = ['DSGFmatrix_omega' num2str(omega_loop)];
-	save_matrix(fileName_DSGF, G_sys_2D, [filePath_st.DSGF, '/', fileName_DSGF, '.csv'], 'DSGF')
-    end % End save DSGF matrix for this frequency loop
-
-
-    % Export transmission coefficient matrix for this frequency loop
-    if output.transmission_coefficient_matrix
-        % File name where results will be saved (based on what frequency band is chosen)
-        fileName_Trans = ['TransMatrix_omega' num2str(omega_loop)];
-
-	save_matrix(fileName_Trans, Trans, [filePath_st.Trans, '/', fileName_Trans, '.csv'], 'transmission coefficient')
-
-    end
-
-
+    save_DSGF_TRANS_matrix(output, filePath_st, omega_loop, G_sys_2D, Trans);
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     % Print status to Command window %
@@ -303,14 +283,6 @@ end
 % Print status to Command Window %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% Print out workspace memory required
-vars = struct2cell(whos);
-workspaceMem = sum(cell2mat(vars(3,:)))/1e9;
-disp('----------------------------------------------------------------')
-disp(['Workspace memory required is ', num2str(workspaceMem), ' GB'])
-disp('')
-disp('----------------------------------------------------------------')
-%memory
-
+display_memory_consumption(struct2cell(whos));
 
 end % End function

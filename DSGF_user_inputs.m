@@ -59,9 +59,9 @@ description = '2spheres';
 %      discretization = {Discretization.sphere_8 "user_defined_discretization_2"}
 %
 
-%discretization = {Discretization.sphere_8, Discretization.sphere_8};
+discretization = {Discretization.sphere_8, Discretization.sphere_8};
 %discretization = {Discretization.sphere_8, "Gaussian_sphere_sigma0-2_rng9_N7399"};
-discretization = {"Gaussian_sphere_sigma0-2_rng9_N7399", "Gaussian_sphere_sigma0-2_rng9_N7399"};
+%discretization = {"Gaussian_sphere_sigma0-2_rng9_N7399", "Gaussian_sphere_sigma0-2_rng9_N7399"};
 
 
 %****************************SCALE EACH OBJECT****************************%
@@ -127,11 +127,7 @@ epsilon_ref = 1;
 % Vector of angular frequencies at which simulations will be run.
 % Vector is of dimension (N_omega x 1)
 
-N_omega = 100;
-lambda = linspace(5e-6, 25e-6, N_omega); % [m]
-c_0 = 299792458;            % Speed of light in vacuum [m/s]
-omega = (2*pi*c_0./lambda).'; % [rad/s]
-
+[omega] = uniform_omega(5e-6, 25e-6, 100);
 
 %**********************OBSERVATION POINT (OPTIONAL)***********************%
 
@@ -167,6 +163,9 @@ output.heat_transfer_coefficient = true;
 
 % Save figures?
 output.save_fig = true;
+
+% figure format
+output.figure_format = FigureFormat.jpg;
 
 % Save all Workspace variables in .mat file?
 output.save_workspace = true;
