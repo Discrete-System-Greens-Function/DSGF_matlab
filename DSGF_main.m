@@ -218,25 +218,8 @@ for omega_loop = 1:N_omega % Loop through all frequencies
     %%%%%%%%%%%%%%%%
     % Save results %
     %%%%%%%%%%%%%%%%
-    
-    % Export DSGF matrix for this frequency loop
-    if output.DSGF_matrix
-        % File name where results will be saved (based on what frequency band is chosen)
-        fileName_DSGF = ['DSGFmatrix_omega' num2str(omega_loop)];
-	save_matrix(fileName_DSGF, G_sys_2D, [filePath_st.DSGF, '/', fileName_DSGF, '.csv'], 'DSGF')
-    end % End save DSGF matrix for this frequency loop
 
-
-    % Export transmission coefficient matrix for this frequency loop
-    if output.transmission_coefficient_matrix
-        % File name where results will be saved (based on what frequency band is chosen)
-        fileName_Trans = ['TransMatrix_omega' num2str(omega_loop)];
-
-	save_matrix(fileName_Trans, Trans, [filePath_st.Trans, '/', fileName_Trans, '.csv'], 'transmission coefficient')
-
-    end
-
-
+    save_DSGF_TRANS_matrix(output, filePath_st, omega_loop, G_sys_2D, Trans);
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     % Print status to Command window %
