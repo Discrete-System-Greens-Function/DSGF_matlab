@@ -1,4 +1,4 @@
-function [omega] = even_omega(start_lambda, end_lambda, N_omega)
+function [omega] = uniform_omega(start_lambda, end_lambda, N_omega)
 % calculates a uniformly discretized vector of angular frequencies for a given range of vacuum wavelengths
 % and how many elements it should have
 % 
