@@ -127,7 +127,7 @@ epsilon_ref = 1;
 % Vector of angular frequencies at which simulations will be run.
 % Vector is of dimension (N_omega x 1)
 
-[omega] = even_omega(5e-6, 25e-6, 100);
+[omega] = uniform_omega(5e-6, 25e-6, 100);
 
 %**********************OBSERVATION POINT (OPTIONAL)***********************%
 
