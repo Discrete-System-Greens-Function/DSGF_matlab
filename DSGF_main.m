@@ -218,6 +218,11 @@ for omega_loop = 1:N_omega % Loop through all frequencies
     %%%%%%%%%%%%%%%%
     % Save results %
     %%%%%%%%%%%%%%%%
+	
+    % Save all workspace variables
+    if output.save_workspace
+        save([filePath_st.main, '/', file_name_saved])
+    end
 
     save_DSGF_TRANS_matrix(output, filePath_st, omega_loop, G_sys_2D, Trans);
 
