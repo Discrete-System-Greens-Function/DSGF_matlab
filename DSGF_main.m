@@ -193,13 +193,15 @@ for omega_loop = 1:N_omega % Loop through all frequencies
     % Record time at start of frequency loop
     t1 = toc;
     
-    if calc_approach == CalculationOption.direct
+    switch calc_approach
+	    
+	    case CalculationOption.direct
         
-        [ G_sys_2D, Trans, Q_omega_bulk(omega_loop, :), Q_omega_subvol(omega_loop, :) ] = direct_function(omega(omega_loop), r, epsilon(omega_loop)*ones(N,1), epsilon_ref, delta_V_vector, T_vector, ind_bulk);
+		[ G_sys_2D, Trans, Q_omega_bulk(omega_loop, :), Q_omega_subvol(omega_loop, :) ] = direct_function(omega(omega_loop), r, epsilon(omega_loop)*ones(N,1), epsilon_ref, delta_V_vector, T_vector, ind_bulk);
         
-    elseif calc_approach == CalculationOption.iterative
+	     case CalculationOption.iterative
         
-        % THIS IS STILL UNDER CONSTUCTION
+			% THIS IS STILL UNDER CONSTUCTION
         
     end % End direct vs. iterative approach
     
