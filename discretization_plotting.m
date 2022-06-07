@@ -42,12 +42,12 @@ function discretization_plotting(r, L_sub, N, show_axes, output, saveDir)
 
 	% Save discretization figure file
 	if output.save_fig
-	    fig_path_dielectricFunction = [saveDir '/voxel.fig'];
-	    saveas(FIG_voxel, fig_path_dielectricFunction)
+	    fig_path_dielectricFunction = [saveDir '/voxel'];
+	    saveas(FIG_voxel, fig_path_dielectricFunction, string(output.figure_format))
 	    clear FIG_voxel % Remove previous plot handles
 
-	    fig_path_discretization = [saveDir '/discretization.fig'];
-	    saveas(FIG_discretization, fig_path_discretization)
+	    fig_path_discretization = [saveDir '/discretization'];
+	    saveas(FIG_discretization, fig_path_discretization, string(output.figure_format))
 	    clear FIG_discretization % Remove previous plot handles
 	end
 

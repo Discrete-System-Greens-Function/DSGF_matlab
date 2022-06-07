@@ -164,6 +164,9 @@ output.heat_transfer_coefficient = true;
 % Save figures?
 output.save_fig = true;
 
+% figure format
+output.figure_format = FigureFormat.jpg;
+
 % Save all Workspace variables in .mat file?
 output.save_workspace = true;
 

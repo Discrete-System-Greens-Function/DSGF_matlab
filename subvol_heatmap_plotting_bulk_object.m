@@ -47,11 +47,11 @@ function subvol_heatmap(r, L_sub, Q_total_subvol, c_limits, show_axes, output, s
 	
 	if output.save_fig
 		
-	    heatmap_view_1_path = [saveDir '/heatmap_full_view1.fig'];
-	    heatmap_view_2_path = [saveDir '/heatmap_full_view2.fig'];
+	    heatmap_view_1_path = [saveDir '/heatmap_full_view1'];
+	    heatmap_view_2_path = [saveDir '/heatmap_full_view2'];
 
-	    saveas(heatmap_view_1, heatmap_view_1_path)
-	    saveas(heatmap_view_2, heatmap_view_2_path)
+	    saveas(heatmap_view_1, heatmap_view_1_path, string(output.figure_format))
+	    saveas(heatmap_view_2, heatmap_view_2_path, string(output.figure_format))
 
 	end
 

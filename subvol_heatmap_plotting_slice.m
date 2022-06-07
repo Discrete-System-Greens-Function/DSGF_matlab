@@ -27,10 +27,10 @@ function subvol_heatmap_plotting_slice(r_st, L_sub, Q_total_subvol_st, c_limits,
 
 	if output.save_fig
 		
-	    heatmap_xz_slice_path = [saveDir '/heatmap_xz_slice.fig'];
-	    heatmap_xy_slice_path = [saveDir '/heatmap_xy_slice.fig'];
+	    heatmap_xz_slice_path = [saveDir '/heatmap_xz_slice'];
+	    heatmap_xy_slice_path = [saveDir '/heatmap_xy_slice'];
 
-	    saveas(heatmap_xy_slice_fig, heatmap_xy_slice_path)
-	    saveas(heatmap_xz_slice_fig, heatmap_xz_slice_path)
+	    saveas(heatmap_xy_slice_fig, heatmap_xy_slice_path, string(output.figure_format))
+	    saveas(heatmap_xz_slice_fig, heatmap_xz_slice_path, string(output.figure_format))
 	end
 end

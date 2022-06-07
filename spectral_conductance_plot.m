@@ -22,8 +22,8 @@ function spectral_conductance_plot(omega, G_omega_bulk_12, output, saveDir)
 
     % Save figure files
     if output.save_fig
-        spectral_conductance_fig_path = [saveDir '/spectralConductance.fig'];
-        saveas(spectral_conductance_fig, spectral_conductance_fig_path)
+        spectral_conductance_fig_path = [saveDir '/spectralConductance'];
+        saveas(spectral_conductance_fig, spectral_conductance_fig_path, string(output.figure_format))
     end
 
 end

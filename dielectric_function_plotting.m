@@ -22,7 +22,7 @@ function dielectric_function_plotting(omega, epsilon, material, N_omega, output,
 
 	% Save dielectric function figure file
 	if output.save_fig
-	    fig_path_dielectricFunction = [saveDir '/dielectric_function.fig'];
-	    saveas(FIG_dielectric_function, fig_path_dielectricFunction)
+	    fig_path_dielectricFunction = [saveDir '/dielectric_function'];
+	    saveas(FIG_dielectric_function, fig_path_dielectricFunction, string(output.figure_format))
 	    clear FIG_dielectric_function % Remove previous plot handles
 	end
