@@ -19,8 +19,7 @@ clear, clc, close all
 % Short description of system you are modeling (this will be used to name
 % the saved files)
 
-description = '2spheres';
-
+description = '2spheres'; %cubes
 
 %**********************DISCRETIZATION OF EACH OBJECT**********************%
 % 
@@ -59,38 +58,61 @@ description = '2spheres';
 %      discretization = {Discretization.sphere_8 "user_defined_discretization_2"}
 %
 
-discretization = {Discretization.sphere_8, Discretization.sphere_8};
 %discretization = {Discretization.sphere_8, "Gaussian_sphere_sigma0-2_rng9_N7399"};
 %discretization = {"Gaussian_sphere_sigma0-2_rng9_N7399", "Gaussian_sphere_sigma0-2_rng9_N7399"};
 
-
-%****************************SCALE EACH OBJECT****************************%
-
-% Characteriztic length for scaling the discretized lattice of each bulk
-% object.
-%
-% If a pre-made sample is chosen, the characteristic length is:
-%     sphere: radius
-%     cube: side length
-%     thin film: film thickness
-%     dipole: radius
-%
-% If a user-defined input is chosen, the characteristic length is the
-% scaling factor of the user-input cubic lattice.
-%
-
-%L_char = [50e-9, 50e-9]; % [m]
-%L_char = [50e-9, 1e-9]; % [m]
-L_char = [1e-9, 1e-9]; % [m]
+%discretization = "2_thin_films_Lx500nm_Ly500nm_Lz500nm_d500nm_N16_discretization";
+%delta_V = "2_thin_films_Lx500nm_Ly500nm_Lz500nm_d500nm_N16_delta_V_vector";
 
 
-%**************************ORIGIN OF EACH OBJECT**************************%
+discretization_type = 'sample'; % sample or user-defined 
 
-% Matrix containing Cartesian coordinates of the origin of each object.
+if strcmp('sample',discretization_type) 
+    
+    discretization = {Discretization.sphere_8, Discretization.sphere_8};
+    
+    %****************************SCALE EACH OBJECT****************************%
 
-origin = [0,0,0;
+    % Characteriztic length for scaling the discretized lattice of each bulk
+    % object.
+    %
+    % If a pre-made sample is chosen, the characteristic length is:
+    %     sphere: radius
+    %     cube: side length
+    %     thin film: film thickness
+    %     dipole: radius
+    %
+    % If a user-defined input is chosen, the characteristic length is the
+    % scaling factor of the user-input cubic lattice.
+    %
+
+    L_char = [50e-9, 50e-9]; % [m]
+    %L_char = [50e-9, 1e-9]; % [m]
+    %L_char = [1e-9, 1e-9]; % [m]
+
+
+    % Distance between the objects
+    d = 10.e-9; %[m]
+
+
+    %**************************ORIGIN OF EACH OBJECT**************************%
+
+    % Matrix containing Cartesian coordinates of the origin of each object.
+
+    %{
+    origin = [0,0,0;
           110e-9, 0, 0]; % [m]
+    %}
 
+    origin = [0,0,0; (2*L_char(1))+d, 0, 0]; % [m]      
+
+    
+elseif strcmp('user-defined',discretization_type)
+    
+    discretization = "2_thin_films_Lx500nm_Ly500nm_Lz500nm_d500nm_N72_discretization";
+    delta_V = "2_thin_films_Lx500nm_Ly500nm_Lz500nm_d500nm_N72_delta_V_vector";
+
+end
 
 %********************************MATERIAL*********************************%
 % Options:
@@ -104,14 +126,26 @@ material = Material.SiO_2;
 
 %***********************TEMPERATURE OF EACH OBJECT************************%
 
-T = [300, 800]; % [K]
+T = [300, 400]; % [K]
 
 
 %****************TEMPERATURE FOR CONDUCTANCE CALCULATIONS*****************%
 
 % Temperature at which the spectral conductance will be calculated.
 
-T_cond = 300; % [K]
+T_cond = [200,250,300,350,400]; % [K]
+
+
+%************************FREQUENCY DISCRETIZATION*************************%
+
+% Vector of angular frequencies at which simulations will be run.
+% Vector is of dimension (N_omega x 1)
+
+% Wavelength limits are provided
+[omega] = uniform_omega(5e-6, 25e-6, 100); 
+
+%Frequencies limits are provided
+%[omega] = non_uniform_omega(material);
 
 
 %********************DIELECTRIC FUNCTION OF BACKGROUND********************%
@@ -122,19 +156,20 @@ T_cond = 300; % [K]
 epsilon_ref = 1;
 
 
-%************************FREQUENCY DISCRETIZATION*************************%
-
-% Vector of angular frequencies at which simulations will be run.
-% Vector is of dimension (N_omega x 1)
-
-[omega] = uniform_omega(5e-6, 25e-6, 100);
-
 %**********************OBSERVATION POINT (OPTIONAL)***********************%
 
 % Cartesian coordinates of observation point at which the LDOS will be
 % calculated
 
 observation_point = [0,0,60e-9]; % [m]
+
+
+%********************** WAVE TYPE (OPTIONAL)***********************%
+
+% Specify the contribution to be accounted: total, propagating only or
+% evanescent only. Choose between "total", "prop", or "evan" 
+
+wave_type = "total"; 
 
 
 %*****************************DESIRED OUTPUTS*****************************%
@@ -145,14 +180,17 @@ output.power_dissipated_subvol = true;
 % Output the power dissipated in each bulk object?
 output.power_dissipated_bulk = true;
 
+% Output the heatmap into slices?
+output.heatmap_sliced = false;
+
 % Output the total and spectral conductance for each bulk object?
 output.conductance = true;
 
 % Output the transmission coefficient matrix?
-output.transmission_coefficient_matrix = true;
+output.transmission_coefficient_matrix = false;
 
 % Output the DSGF matrices for every frequency?
-output.DSGF_matrix = true;
+output.DSGF_matrix = false;
 
 % Output the local density of states (LDOS)?
 % NOTE: This only works when an observation point is given as an input.
@@ -174,4 +212,13 @@ output.save_workspace = true;
 %***************************END OF USER INPUTS****************************%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-DSGF_main(description, discretization, L_char, origin, material, T, T_cond, epsilon_ref, omega, observation_point, output);
+if strcmp('sample',discretization_type) 
+    delta_V = '';
+elseif strcmp('user-defined',discretization_type)
+    L_char = '';
+    origin = '';
+end    
+
+
+DSGF_main(description, discretization, material, T, T_cond, epsilon_ref, omega, observation_point, wave_type, output, discretization_type, L_char, origin, delta_V);
+

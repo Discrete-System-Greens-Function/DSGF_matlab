@@ -1,4 +1,4 @@
-function subvol_heatmap_plotting(r, L_sub, Q_total_subvol, show_axes, output, saveDir)
+function subvol_heatmap_plotting_user_defined(r, L_sub, Q_total_subvol, show_axes, output, saveDir,  N, N1)
 % plots the heatmaps for the total heat dissipation per subvolume
 % plots generated:
 % 	heatmap for bulk object (2 different views)
@@ -16,7 +16,7 @@ function subvol_heatmap_plotting(r, L_sub, Q_total_subvol, show_axes, output, sa
 
 
 	% plotting the subvolume heatmap in 2 seperate views
-	subvol_heatmap_plotting_bulk_object(r, L_sub, Q_total_subvol, c_limits, show_axes, output, saveDir);
+	subvol_heatmap_plotting_bulk_object_user_defined(r, L_sub, Q_total_subvol, c_limits, show_axes, output, saveDir, N, N1);
 
     
     if output.heatmap_sliced

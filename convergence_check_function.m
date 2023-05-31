@@ -262,6 +262,7 @@ ratio_mat = L_sub./lambda_mat;
 ratio_decay = L_sub./lambda_decay;
 %ratio_pen = L_sub./d;
 
+FIG_check_convergence = figure(11);
 plot(omega, ratio_ref, omega, ratio_mat, omega, ratio_decay, 'linewidth', 4)
 xlabel('Frequency, \omega [rad/s]', 'fontsize', 12)
 ylabel('Convergence ratios, L_s_u_b/\lambda', 'fontsize', 12)

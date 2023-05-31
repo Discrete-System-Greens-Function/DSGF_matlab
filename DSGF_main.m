@@ -1,4 +1,4 @@
-function [] = DSGF_main(description, discretization, L_char, origin, material, T, T_conductance, epsilon_ref, omega, observation_point, output)
+function [] = DSGF_main(description, discretization, material, T, T_conductance, epsilon_ref, omega, observation_point, wave_type, output, discretization_type, L_char, origin, delta_V)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
@@ -65,44 +65,70 @@ show_axes = true;
 calc_approach = CalculationOption.direct;
 
 % Conduct convergence analysis?
-convergence_analysis = true;
+convergence_analysis = false;
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %****************************DISCRETIZATION*******************************%
 
-[N_each_object, volume, r_each_object, ind_bulk, delta_V_each_object, L_sub_each_object] = read_discretization(discretization, L_char, origin);
+if strcmp('sample',discretization_type)
+     [N_each_object, volume, r_each_object, ind_bulk, delta_V_each_object, L_sub_each_object] = read_discretization(discretization, L_char, origin);
+     
+     % Discretized lattice including subvolumes of all objects in one matrix (N x 3 matrix)
+     r = cell2mat(r_each_object);
+     
+     % Total number of subvolumes
+    [N,~] = size(r);
 
-% Discretized lattice including subvolumes of all objects in one matrix (N x 3 matrix)
-r = cell2mat(r_each_object);
+    % Subvolume size for all N subvolumes (N x 1 vectors)
+    delta_V_vector = cell2mat(delta_V_each_object); % Volume of subvolumes for all N subvolumes
+     L_sub_vector = cell2mat(L_sub_each_object);     % Length of side of a cubic subvolume for all N subvolumes
+     
+    % UPDATE FOR MORE THAN 2 OBJECTS!
+    % Center-of-mass separation distance [m]
+    d_center = norm(origin(1,:) - origin(2,:)); 
 
-% Total number of subvolumes
-[N,~] = size(r);
+    % UPDATE FOR MORE THAN 2 OBJECTS!
+    % Closest vacuum gap separation distance [m]
+    [ d_min_center, d_min_edge, r_1_min, r_2_min ] = calculate_surface_separation( r_each_object{1}, r_each_object{2}, L_sub_each_object{1}(1),  L_sub_each_object{2}(1));
 
-% Subvolume size for all N subvolumes (N x 1 vectors)
-delta_V_vector = cell2mat(delta_V_each_object); % Volume of subvolumes for all N subvolumes
-L_sub_vector = cell2mat(L_sub_each_object);     % Length of side of a cubic subvolume for all N subvolumes
+    % UPDATE FOR MORE THAN 2 OBJECTS!
+    % Temperature
+    T_vector = [T(1).*ones(N_each_object(1),1); T(2).*ones(N_each_object(2),1)];
+    
+elseif strcmp('user-defined',discretization_type)
+        
+    discFile = discretization; % File name of discretization
+    discDir = "Input_parameters/Discretizations/User_defined"; % Directory where discretization is stored
 
-% UPDATE FOR MORE THAN 2 OBJECTS!
-% Center-of-mass separation distance [m]
-d_center = norm(origin(1,:) - origin(2,:)); 
+    % Import discretization 
+    r = readmatrix(append(append(append(discDir, '/'), discFile), '.txt'));
 
-% UPDATE FOR MORE THAN 2 OBJECTS!
-% Closest vacuum gap separation distance [m]
-[ d_min_center, d_min_edge, r_1_min, r_2_min ] = calculate_surface_separation( r_each_object{1}, r_each_object{2}, L_sub_each_object{1}(1),  L_sub_each_object{2}(1));
+    % Total number of subvolumes
+    [N,~] = size(r);
+    N1 = N/2;       % Preallocate
+    N2 = N/2;       % Preallocate
+    ind_bulk = [1,N1+1]; 
 
-% UPDATE FOR MORE THAN 2 OBJECTS!
-% Temperature
-T_vector = [T(1).*ones(N_each_object(1),1); T(2).*ones(N_each_object(2),1)];
-
-
+    % Subvolume size for all N subvolumes (N x 1 vectors)
+    discFile2 = delta_V;
+    delta_V_vector = readmatrix(append(append(append(discDir, '/'), discFile2), '.txt')); % Volume of subvolumes for all N subvolumes
+ 
+    L_sub_vector = delta_V_vector.^(1/3);
+    
+    % Temperature
+    T_vector = [T(1).*ones(N1,1); T(2).*ones(N2,1)];
+end
 
 %%%%%%%%%%%%%%%%%%%%%%%
 % Plot discretization %
 %%%%%%%%%%%%%%%%%%%%%%%
 
-discretization_plotting(r, L_sub_vector, N, show_axes, output, filePath_st.main);
-
+if strcmp('sample',discretization_type)
+    discretization_plotting(r, L_sub_vector, N, show_axes, output, filePath_st.main);
+elseif strcmp('user-defined',discretization_type)
+    discretization_plotting_user_defined(r, L_sub_vector, N, show_axes, output, filePath_st.main, N1);
+end
 
 % % String name describing simulation geometry
 % simulation_geometry = [description '_R' num2str((1e9)*radius_1) 'nm_R' num2str((1e9)*radius_2) 'nm_dc' num2str((1e9)*d_center) 'nm_N' num2str(N1 + N2)];
@@ -176,12 +202,10 @@ end % End convergence check
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Preallocate vectors
-G_omega = zeros(N_omega,1);
-G_omega_eV = zeros(N_omega,1);
 Trans_omega_12 = zeros(N_omega,1);
-Trans_omega_13 = zeros(N_omega,1);
-Trans_lambda_12 = zeros(N_omega,1);
-Trans_lambda_13 = zeros(N_omega,1);
+%Trans_omega_13 = zeros(N_omega,1);
+%Trans_lambda_12 = zeros(N_omega,1);
+%Trans_lambda_13 = zeros(N_omega,1);
 Q_omega_bulk = zeros(N_omega, length(ind_bulk));
 Q_omega_subvol = zeros(N_omega, N);
 
@@ -197,11 +221,11 @@ for omega_loop = 1:N_omega % Loop through all frequencies
 	    
 	    case CalculationOption.direct
         
-		[ G_sys_2D, Trans, Q_omega_bulk(omega_loop, :), Q_omega_subvol(omega_loop, :) ] = direct_function(omega(omega_loop), r, epsilon(omega_loop)*ones(N,1), epsilon_ref, delta_V_vector, T_vector, ind_bulk);
+		[ G_sys_2D, Trans, Q_omega_bulk(omega_loop, :), Q_omega_subvol(omega_loop, :) ] = direct_function(omega(omega_loop), r, epsilon(omega_loop)*ones(N,1), epsilon_ref, delta_V_vector, T_vector, ind_bulk, wave_type);
         
 	     case CalculationOption.iterative
         
-			% THIS IS STILL UNDER CONSTUCTION
+			% not available for MATLAB version
         
     end % End direct vs. iterative approach
     
@@ -214,7 +238,7 @@ for omega_loop = 1:N_omega % Loop through all frequencies
     %Trans_lambda_12(omega_loop) = Trans_omega_12(omega_loop)*(omega(omega_loop)^2)/(((2*pi)^2)*c_0);
     %Trans_lambda_13(omega_loop) = Trans_omega_13(omega_loop)*(omega(omega_loop)^2)/(((2*pi)^2)*c_0);
     
-        
+ %{       
     %%%%%%%%%%%%%%%%
     % Save results %
     %%%%%%%%%%%%%%%%
@@ -223,9 +247,10 @@ for omega_loop = 1:N_omega % Loop through all frequencies
     if output.save_workspace
         save([filePath_st.main, '/', file_name_saved])
     end
-
-    save_DSGF_TRANS_matrix(output, filePath_st, omega_loop, G_sys_2D, Trans);
-
+    
+        save_DSGF_TRANS_matrix(output, filePath_st, omega_loop, G_sys_2D, Trans);
+    
+%}    
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     % Print status to Command window %
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -255,9 +280,11 @@ end % End loop through all frequencies
 %%%%%%%%%%%%%%%%%%
 % Plot heat maps %
 %%%%%%%%%%%%%%%%%%
-
-subvol_heatmap_plotting(r, L_sub_vector, Q_total_subvol, show_axes, output, filePath_st.main);
-
+    if strcmp('sample',discretization_type)
+        subvol_heatmap_plotting(r, L_sub_vector, Q_total_subvol, show_axes, output, filePath_st.main);
+    elseif strcmp('user-defined',discretization_type)
+        subvol_heatmap_plotting_user_defined(r, L_sub_vector, Q_total_subvol, show_axes, output, filePath_st.main, N, N1);
+    end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Calculate spectral and total conductance at temperature, T_conductance %
@@ -267,9 +294,19 @@ subvol_heatmap_plotting(r, L_sub_vector, Q_total_subvol, show_axes, output, file
 % objects.
 if output.conductance
 
+    for i = 1: length(T_conductance)
+        
+    [ G_omega_bulk_12(:,i), G_bulk_12(:,i) ] = conductance_bulk( Trans_omega_12, T_conductance(i), omega );
+    
+    end
+    
+    spectral_conductance_plot(omega, G_omega_bulk_12(:,3), output, filePath_st.main);
+    
+    %{
     [ G_omega_bulk_12, G_bulk_12 ] = conductance_bulk( Trans_omega_12, T_conductance, omega );
 
 	spectral_conductance_plot(omega, G_omega_bulk_12, output, filePath_st.main);
+    %}
 
 end % End conductance calculations
 
@@ -277,6 +314,8 @@ end % End conductance calculations
 %%%%%%%%%%%%%%%%
 % Save results %
 %%%%%%%%%%%%%%%%
+
+clear G_sys_2D;
 
 % Save all workspace variables
 if output.save_workspace
