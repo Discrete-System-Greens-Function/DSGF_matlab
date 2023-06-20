@@ -62,8 +62,10 @@ for j = 1:N-1                            % Loop through all discretized volume l
         %between the subvolumes in different membranes
         if wave_type == "evan"
             if j<=N/2 && i>N/2
-                const_2 = - 1/((k*r_ij_mag)^2) + 1i/(k*r_ij_mag);
-                const_3 = - 3/((k*r_ij_mag)^2) + 3*1i/(k*r_ij_mag);
+                %const_2 = - 1/((k*r_ij_mag)^2) + 1i/(k*r_ij_mag); %NF and IF terms
+                %const_3 = - 3/((k*r_ij_mag)^2) + 3*1i/(k*r_ij_mag);%NF and IF terms
+                const_2 = - 1/((k*r_ij_mag)^2) ; %NF terms only
+                const_3 = - 3/((k*r_ij_mag)^2) ; %NF terms only
             else
                 const_2 = 1. - 1./((k*r_ij_mag)^2) + 1.i/(k*r_ij_mag);
                 const_3 = 1. - 3./((k*r_ij_mag)^2) + 3.*1i/(k*r_ij_mag);
