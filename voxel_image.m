@@ -1,4 +1,4 @@
-function [vert, fac] = voxel_image( pts, vox_sz, color, alpha, edgec, w_line, light_option, vox_mag, c_limits )
+function [vert, fac] = voxel_image( pts, vox_sz, color, alpha, edgec, w_line, light_option, vox_mag, c_limits, axis_y )
 %VOXEL_IMAGE Creates a 3D voxel image
 %   Parameters:
 %   pts    - n x 3 matrix with 3D points
@@ -164,9 +164,10 @@ elseif strcmp(light_option, 'heatmap')
     h = patch('Vertices',vert,'Faces',fac,'FaceColor','flat','FaceAlpha',alpha,'Edgecolor',edgec, 'linewidth', w_line,...
         'FaceVertexCData', face_color, 'CDataMapping', 'direct');
     CB = colorbar; % Define colorbar as an object
-    CB.Label.String = 'Heat dissipated in a subvolume, Q [W]'; % Label colorbar
+    CB.Label.String = axis_y; % Label colorbar
     caxis(c_limits)  % Set colorbar limits
     colormap fireice % Set colormap color scheme
+
 end
 
 %h = patch('Vertices',vert,'Faces',fac, 'FaceLighting', 'gouraud', 'FaceColor', 'interp');
