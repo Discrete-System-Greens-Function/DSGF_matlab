@@ -156,14 +156,6 @@ T_cond = [200,250,300,350,400]; % [K]
 epsilon_ref = 1;
 
 
-%**********************OBSERVATION POINT (OPTIONAL)***********************%
-
-% Cartesian coordinates of observation point at which the LDOS will be
-% calculated
-
-observation_point = [0,0,60e-9]; % [m]
-
-
 %********************** WAVE TYPE (OPTIONAL)***********************%
 
 % Specify the contribution to be accounted: total, propagating only or
@@ -191,10 +183,6 @@ output.transmission_coefficient_matrix = false;
 
 % Output the DSGF matrices for every frequency?
 output.DSGF_matrix = false;
-
-% Output the local density of states (LDOS)?
-% NOTE: This only works when an observation point is given as an input.
-output.LDOS = true;
 
 % Output the heat transfer coefficient?
 output.heat_transfer_coefficient = true;
