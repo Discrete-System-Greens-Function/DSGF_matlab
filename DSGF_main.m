@@ -1,4 +1,4 @@
-function [] = DSGF_main(description, discretization, material, T, T_conductance, epsilon_ref, omega, observation_point, wave_type, output, discretization_type, L_char, origin, delta_V)
+function [] = DSGF_main(description, discretization, material, T, T_conductance, epsilon_ref, omega, wave_type, output, discretization_type, L_char, origin, delta_V)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
