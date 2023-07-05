@@ -19,67 +19,42 @@ clear, clc, close all
 % Short description of system you are modeling (this will be used to name
 % the saved files)
 
-description = '2spheres'; %cubes
+description = 'User-defined_2_cubes_L1_500nm_L2_500nm_d_500nm_N_72';        %  Sample_2_spheres_r1_50nm_r2_50nm_d_10nm_N_16  '2cubes_total'
 
-%**********************DISCRETIZATION OF EACH OBJECT**********************%
-% 
-% Define the discretization for each bulk object. Each bulk object needs 
-% its own discretization. The discretizations can be taken from the
-% pre-made samples or defined by the user.  
-%
-% If a pre-made sample is chosen, the user can choose the discretization 
-% from a list of pre-defined files. Files are included for spheres, cubes,
-% and thin films with variable number of subvolumes and for diples defined
-% by a single subvolume.  The number at the end of the chosen 
-% discretization represents the number of subvolumes in that
-% discretization. 
-%
-% Pre-made sample discretization options:
-%     Discretization.sphere_*
-%     Discretization.cube_*
-%     Discretization.thin_film_*
-%     Discretization.dipole
-%
-% Example with two sample discretizations chosen:
-%      discretization = {Discretization.sphere_8, Discretization.sphere_8};
-%
-% If a user-defined input is chosen, the user-defined .txt file of the 
-% discretization should be stored in the directory 
-% Input_parameters/Discretizations/User_defined.  The inputs are then
-% strings of the file name of the user-defined discretization.
-%
-% Example of two user-defined discretizations:
-%      discretization = {"user_defined_discretization_1", "user_defined_discretization_2"}
-%
-% Sample discretizations and user-defined discretizations can be
-% mixed-and-matched.
-%
-% Example of one sample discretization and one user-defined discretization
-%      discretization = {Discretization.sphere_8 "user_defined_discretization_2"}
-%
+%********************SELECTION OF TYPE OF SIMULATION *********************%
 
-%discretization = {Discretization.sphere_8, "Gaussian_sphere_sigma0-2_rng9_N7399"};
-%discretization = {"Gaussian_sphere_sigma0-2_rng9_N7399", "Gaussian_sphere_sigma0-2_rng9_N7399"};
+% Choose between sample (spheres) or user-defined (cubes)
 
-%discretization = "2_thin_films_Lx500nm_Ly500nm_Lz500nm_d500nm_N16_discretization";
-%delta_V = "2_thin_films_Lx500nm_Ly500nm_Lz500nm_d500nm_N16_delta_V_vector";
-
-
-discretization_type = 'sample'; % sample or user-defined 
+discretization_type = 'sample'; 
 
 if strcmp('sample',discretization_type) 
-    
+
+    %********************DISCRETIZATION OF EACH OBJECT********************%
+    % 
+    % Define the discretization for each bulk object. In the sample, each bulk object needs 
+    % its own discretization. The discretizations can be taken from the
+    % pre-made samples or defined by the user.  
+    %
+    % The number at the end of the chosen discretization represents the 
+    % number of subvolumes in that discretization. 
+    %
+    % Pre-made sample discretization options:
+    %     Discretization.sphere_*
+    %     Discretization.cube_* ---- not available yet.
+    %
+    % Example with two sample discretizations chosen:
+    %      discretization = {Discretization.sphere_8, Discretization.sphere_8};
+    %
+
     discretization = {Discretization.sphere_8, Discretization.sphere_8};
     
-    %****************************SCALE EACH OBJECT****************************%
+    %**************************SCALE EACH OBJECT**************************%
 
     % Characteriztic length for scaling the discretized lattice of each bulk
     % object.
     %
     % If a pre-made sample is chosen, the characteristic length is:
     %     sphere: radius
-    %     cube: side length
-    %     thin film: film thickness
     %     dipole: radius
     %
     % If a user-defined input is chosen, the characteristic length is the
@@ -87,28 +62,29 @@ if strcmp('sample',discretization_type)
     %
 
     L_char = [50e-9, 50e-9]; % [m]
-    %L_char = [50e-9, 1e-9]; % [m]
-    %L_char = [1e-9, 1e-9]; % [m]
-
-
+   
+    %**********************DISTANCE BETWEEN OBJECTS***********************%
+    
     % Distance between the objects
     d = 10.e-9; %[m]
 
-
-    %**************************ORIGIN OF EACH OBJECT**************************%
+    %************************ORIGIN OF EACH OBJECT************************%
 
     % Matrix containing Cartesian coordinates of the origin of each object.
-
-    %{
-    origin = [0,0,0;
-          110e-9, 0, 0]; % [m]
-    %}
-
+    
+    %origin = [0,0,0; 110e-9, 0, 0]; % [m]
     origin = [0,0,0; (2*L_char(1))+d, 0, 0]; % [m]      
 
     
 elseif strcmp('user-defined',discretization_type)
     
+    %********************DISCRETIZATION OF THE SYSTEM*********************%
+    %
+    % Define the discretization for the system (2 group of objects).
+    % The user should modify the discretization and delta_V parameters
+    % according to the name of the file with the desired user-defined discretization. 
+    % These files are generated using matlab scripts.
+        
     discretization = "2_thin_films_Lx500nm_Ly500nm_Lz500nm_d500nm_N72_discretization";
     delta_V = "2_thin_films_Lx500nm_Ly500nm_Lz500nm_d500nm_N72_delta_V_vector";
 
@@ -124,9 +100,33 @@ end
 material = Material.SiO_2;
 
 
+%********************DIELECTRIC FUNCTION OF BACKGROUND********************%
+
+% The dielectric function of the background reference medium must be purely
+% real-valued.
+
+epsilon_ref = 1;
+
+
+%************************FREQUENCY DISCRETIZATION*************************%
+
+% Vector of angular frequencies at which simulations will be run.
+% Vector is of dimension (N_omega x 1)
+% Suggestions of wavelength range:
+%           SiO2: uniform_omega(5e-6, 25e-6, 100);
+%           SiC: uniform_omega(9.92e-6, 13.42e-6, 200);
+%           SiN: uniform_omega(8e-6, 90e-6, 300);
+
+% Wavelength [lambda] limits are provided
+[omega] = uniform_omega(5e-6, 25e-6, 100); 
+
+%Frequencies in [rad/s] limits are provided
+%[omega] = non_uniform_omega(material);
+
+
 %***********************TEMPERATURE OF EACH OBJECT************************%
 
-T = [300, 400]; % [K]
+T = [400, 300]; % [K]
 
 
 %****************TEMPERATURE FOR CONDUCTANCE CALCULATIONS*****************%
@@ -136,30 +136,10 @@ T = [300, 400]; % [K]
 T_cond = [200,250,300,350,400]; % [K]
 
 
-%************************FREQUENCY DISCRETIZATION*************************%
-
-% Vector of angular frequencies at which simulations will be run.
-% Vector is of dimension (N_omega x 1)
-
-% Wavelength limits are provided
-[omega] = uniform_omega(5e-6, 25e-6, 100); 
-
-%Frequencies limits are provided
-%[omega] = non_uniform_omega(material);
-
-
-%********************DIELECTRIC FUNCTION OF BACKGROUND********************%
-
-% The dielectric function of the background reference medium must be purely
-% real-valued.
-
-epsilon_ref = 1;
-
-
-%********************** WAVE TYPE (OPTIONAL)***********************%
+%************************** WAVE TYPE (OPTIONAL)**************************%
 
 % Specify the contribution to be accounted: total, propagating only or
-% evanescent only. Choose between "total", "prop", or "evan" 
+% evanescent only. Choose between "total" or "prop". 
 
 wave_type = "total"; 
 
@@ -191,7 +171,7 @@ output.heat_transfer_coefficient = true;
 output.save_fig = true;
 
 % figure format
-output.figure_format = FigureFormat.jpg;
+output.figure_format = FigureFormat.fig;
 
 % Save all Workspace variables in .mat file?
 output.save_workspace = true;
@@ -208,5 +188,5 @@ elseif strcmp('user-defined',discretization_type)
 end    
 
 
-DSGF_main(description, discretization, material, T, T_cond, epsilon_ref, omega, observation_point, wave_type, output, discretization_type, L_char, origin, delta_V);
+DSGF_main(description, discretization, material, T, T_cond, epsilon_ref, omega, wave_type, output, discretization_type, L_char, origin, delta_V);
 
