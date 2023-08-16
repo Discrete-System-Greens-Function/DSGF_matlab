@@ -115,14 +115,15 @@ epsilon_ref = 1;
 % Vector of angular frequencies at which simulations will be run.
 % Vector is of dimension (N_omega x 1)
 % Suggestions of wavelength range:
-%           SiO2: uniform_omega(5e-6, 25e-6, 100);
-%           SiC: uniform_omega(9.92e-6, 13.42e-6, 200);
-%           SiN: uniform_omega(8e-6, 90e-6, 300);
+%           SiO2: uniform_lambda(5e-6, 25e-6, 100);
+%           SiC: uniform_lambda(9.92e-6, 13.42e-6, 200);
+%           SiN: uniform_lambda(8e-6, 90e-6, 300);
 
 % Wavelength [lambda] limits are provided
-[omega] = uniform_omega(5e-6, 25e-6, 100); 
+%[omega] = uniform_lambda(5e-6, 25e-6, 100); 
 
 %Frequencies in [rad/s] limits are provided
+[omega] = uniform_omega(7.53e13, 3.76e14, 100); 
 %[omega] = non_uniform_omega(material);
 
 

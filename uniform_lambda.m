@@ -1,4 +1,4 @@
-function [omega] = uniform_omega(start_omega, end_omega, N_omega)
+function [omega] = uniform_omega(start_lambda, end_lambda, N_omega)
 % calculates a uniformly discretized vector of angular frequencies for a given range of vacuum wavelengths
 % and how many elements it should have
 % 
@@ -11,8 +11,8 @@ function [omega] = uniform_omega(start_omega, end_omega, N_omega)
 %		omega - angular frequency vector [rad/s]
 %
 
-	omega_pre = linspace(start_omega, end_omega, N_omega); % [m]
-    
-    omega = omega_pre';
-    
+	lambda = linspace(start_lambda, end_lambda, N_omega); % [m]
+	c_0 = 299792458;            % Speed of light in vacuum [m/s]
+	omega = (2*pi*c_0./lambda).'; % [rad/s]
+
 end
