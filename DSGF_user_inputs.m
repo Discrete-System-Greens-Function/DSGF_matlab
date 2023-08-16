@@ -19,7 +19,7 @@ clear, clc, close all
 % Short description of system you are modeling (this will be used to name
 % the saved files)
 
-description = 'User-defined_2_cubes_L1_500nm_L2_500nm_d_500nm_N_72';        %  Sample_2_spheres_r1_50nm_r2_50nm_d_10nm_N_16  '2cubes_total'
+description = 'Sample_2_dipoles_r1_5nm_r2_5nm_d_10nm_N_2';        %  Sample_2_spheres_r1_50nm_r2_50nm_d_10nm_N_16  '2cubes_total' User-defined_2_cubes_L1_500nm_L2_500nm_d_500nm_N_72
 
 %********************SELECTION OF TYPE OF SIMULATION *********************%
 
@@ -40,13 +40,13 @@ if strcmp('sample',discretization_type)
     %
     % Pre-made sample discretization options:
     %     Discretization.sphere_*
-    %     Discretization.cube_* ---- not available yet.
+    %     Discretization.cube_*
     %
     % Example with two sample discretizations chosen:
     %      discretization = {Discretization.sphere_8, Discretization.sphere_8};
     %
 
-    discretization = {Discretization.sphere_8, Discretization.sphere_8};
+    discretization = {Discretization.cube_125, Discretization.cube_125};
     
     %**************************SCALE EACH OBJECT**************************%
 
@@ -56,24 +56,26 @@ if strcmp('sample',discretization_type)
     % If a pre-made sample is chosen, the characteristic length is:
     %     sphere: radius
     %     dipole: radius
+    %     cube: side length
     %
     % If a user-defined input is chosen, the characteristic length is the
     % scaling factor of the user-input cubic lattice.
     %
 
-    L_char = [50e-9, 50e-9]; % [m]
+    L_char = [500.e-9, 500.e-9]; % [m]
    
     %**********************DISTANCE BETWEEN OBJECTS***********************%
     
     % Distance between the objects
-    d = 10.e-9; %[m]
+    d =500.e-9; %[m]
 
     %************************ORIGIN OF EACH OBJECT************************%
 
     % Matrix containing Cartesian coordinates of the origin of each object.
     
     %origin = [0,0,0; 110e-9, 0, 0]; % [m]
-    origin = [0,0,0; (2*L_char(1))+d, 0, 0]; % [m]      
+    %origin = [0,0,0; (L_char(1) + d + L_char(2)), 0, 0]; % [m]  for sphere
+    origin = [0,0,0; (L_char(1)/2 + d + L_char(2)/2), 0, 0]; % [m] for cube     
 
     
 elseif strcmp('user-defined',discretization_type)
@@ -126,7 +128,7 @@ epsilon_ref = 1;
 
 %***********************TEMPERATURE OF EACH OBJECT************************%
 
-T = [400, 300]; % [K]
+T = [300, 400]; % [K]
 
 
 %****************TEMPERATURE FOR CONDUCTANCE CALCULATIONS*****************%
