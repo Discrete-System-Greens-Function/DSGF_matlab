@@ -1,4 +1,4 @@
-function [N_each_object, volume, r_each_object, ind_bulk, delta_V_each_object, L_sub_each_object] = read_discretization(discretization, L_char, origin)
+function [N_each_object, volume, r_each_object, ind_bulk, delta_V_each_object, L_sub_each_object,origin] = read_discretization(discretization, L_char, d)
 % reads all the discretizations for all the bulk objects
 %
 %	Inputs:
@@ -17,6 +17,23 @@ function [N_each_object, volume, r_each_object, ind_bulk, delta_V_each_object, L
 
 	% Number of bulk objects
 	N_bulk = length(discretization);
+    
+    
+	discFile = string(discretization);       % File name of discretization
+	geometry = extractBefore(discFile, '_');     % Geometry of bulk object
+    
+    % Matrix containing Cartesian coordinates of the origin of each object.
+    % Origin sample discretizations based on the geometry
+	switch (geometry)
+	    case "sphere"
+		origin = [0,0,0; (L_char(1) + d + L_char(2)), 0, 0]; % [m]  for sphere
+	    case "cube"
+		 origin = [0,0,0; (L_char(1)/2 + d + L_char(2)/2), 0, 0]; % [m] for cube 
+	    case "thin_film"
+
+	    case "dipole"
+		origin = [0,0,0; (L_char(1) + d + L_char(2)), 0, 0]; % [m]  for sphere
+	end % End switch-case through geometries
 
 	% Determine file structure of bulk object discretization and extract
 	% discretization information.
@@ -29,7 +46,8 @@ function [N_each_object, volume, r_each_object, ind_bulk, delta_V_each_object, L
 	for ii = 1:N_bulk % Loop through all bulk objects
 	    if isenum(discretization{ii}) % Sample discretization is specified
 
-		[r_each_object{ii}, N_each_object(ii), delta_V_each_object{ii}, L_sub_each_object{ii}, volume(ii)] = read_sample_discretization(discretization{ii}, L_char(ii));
+		%[r_each_object{ii}, N_each_object(ii), delta_V_each_object{ii}, L_sub_each_object{ii}, volume(ii)] = read_sample_discretization(discretization{ii}, L_char(ii));
+        [r_each_object{ii}, N_each_object(ii), delta_V_each_object{ii}, L_sub_each_object{ii}, volume(ii)] = read_sample_discretization(geometry{ii}, L_char(ii),discFile(ii));
 
 	    else % User-defined discretization is specified
 

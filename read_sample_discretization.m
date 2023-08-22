@@ -1,4 +1,4 @@
-function [r_each_object, N_each_object, delta_V_each_object, L_sub_each_object, volume] = read_sample_discretization(discretization, L_char)
+function [r_each_object, N_each_object, delta_V_each_object, L_sub_each_object, volume] = read_sample_discretization(geometry, L_char,discFile)
 % reads the sample discretizations
 %
 %	Inputs:
@@ -13,8 +13,6 @@ function [r_each_object, N_each_object, delta_V_each_object, L_sub_each_object, 
 %		volume - volume of bulk object
 
 
-	discFile = string(discretization);       % File name of discretization
-	geometry = extractBefore(discFile, '_');     % Geometry of bulk object
 	discDir = append('Input_parameters/Discretizations/', geometry); % Directory where discretization is stored
 
 	% Import unscaled discretization of each object
@@ -34,6 +32,7 @@ function [r_each_object, N_each_object, delta_V_each_object, L_sub_each_object, 
 	    case "dipole"
 		volume = (4/3)*pi*(L_char.^3);  % Volume of spherical dipole [m^3]
 	end % End switch-case through geometries
+    
 
 	% Subvolume size for each object (uniform discretization)
 	delta_V_each_object = ones(N_each_object, 1).*(volume/N_each_object); % Volume of subvolumes in each object (uniform discretization)

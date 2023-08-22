@@ -19,16 +19,16 @@ clear, clc, close all
 % Short description of system you are modeling (this will be used to name
 % the saved files)
 
-description = 'Sample_2_dipoles_r1_5nm_r2_5nm_d_10nm_N_2';        %  Sample_2_spheres_r1_50nm_r2_50nm_d_10nm_N_16  '2cubes_total' User-defined_2_cubes_L1_500nm_L2_500nm_d_500nm_N_72
+description = 'test';%'2_spheres_Lx50nm_Ly50nm_Lz50nm_d10nm_N72_discretization';        %  Sample_2_spheres_r1_50nm_r2_50nm_d_10nm_N_16  '2cubes_total' User-defined_2_cubes_L1_500nm_L2_500nm_d_500nm_N_72
 
 %********************SELECTION OF TYPE OF SIMULATION *********************%
 
-% Choose between sample (spheres) or user-defined (cubes)
+% Choose between sample or user-defined 
 
 discretization_type = 'sample'; 
 
 if strcmp('sample',discretization_type) 
-
+    
     %********************DISCRETIZATION OF EACH OBJECT********************%
     % 
     % Define the discretization for each bulk object. In the sample, each bulk object needs 
@@ -46,11 +46,11 @@ if strcmp('sample',discretization_type)
     %      discretization = {Discretization.sphere_8, Discretization.sphere_8};
     %
 
-    discretization = {Discretization.cube_125, Discretization.cube_125};
+    discretization = {Discretization.sphere_8, Discretization.sphere_8};
     
     %**************************SCALE EACH OBJECT**************************%
 
-    % Characteriztic length for scaling the discretized lattice of each bulk
+    % Characteristic length for scaling the discretized lattice of each bulk
     % object.
     %
     % If a pre-made sample is chosen, the characteristic length is:
@@ -62,20 +62,13 @@ if strcmp('sample',discretization_type)
     % scaling factor of the user-input cubic lattice.
     %
 
-    L_char = [500.e-9, 500.e-9]; % [m]
+    L_char = [50.e-9, 50.e-9]; % [m]
    
     %**********************DISTANCE BETWEEN OBJECTS***********************%
     
     % Distance between the objects
-    d =500.e-9; %[m]
+    d =10.e-9; %[m]
 
-    %************************ORIGIN OF EACH OBJECT************************%
-
-    % Matrix containing Cartesian coordinates of the origin of each object.
-    
-    %origin = [0,0,0; 110e-9, 0, 0]; % [m]
-    %origin = [0,0,0; (L_char(1) + d + L_char(2)), 0, 0]; % [m]  for sphere
-    origin = [0,0,0; (L_char(1)/2 + d + L_char(2)/2), 0, 0]; % [m] for cube     
 
     
 elseif strcmp('user-defined',discretization_type)
@@ -120,10 +113,10 @@ epsilon_ref = 1;
 %           SiN: uniform_lambda(8e-6, 90e-6, 300);
 
 % Wavelength [lambda] limits are provided
-%[omega] = uniform_lambda(5e-6, 25e-6, 100); 
+[omega] = uniform_lambda(5e-6, 25e-6, 100); 
 
 %Frequencies in [rad/s] limits are provided
-[omega] = uniform_omega(7.53e13, 3.76e14, 100); 
+%[omega] = uniform_omega(7.53e13, 3.76e14, 100); 
 %[omega] = non_uniform_omega(material);
 
 
@@ -187,9 +180,10 @@ if strcmp('sample',discretization_type)
     delta_V = '';
 elseif strcmp('user-defined',discretization_type)
     L_char = '';
-    origin = '';
+    %origin = '';
 end    
 
 
-DSGF_main(description, discretization, material, T, T_cond, epsilon_ref, omega, wave_type, output, discretization_type, L_char, origin, delta_V);
+%DSGF_main(description, discretization, material, T, T_cond, epsilon_ref, omega, wave_type, output, discretization_type, L_char, origin, delta_V);
+DSGF_main(description, discretization, material, T, T_cond, epsilon_ref, omega, wave_type, output, discretization_type, L_char, delta_V, d);
 

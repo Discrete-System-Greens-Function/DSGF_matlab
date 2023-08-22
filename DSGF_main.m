@@ -1,4 +1,5 @@
-function [] = DSGF_main(description, discretization, material, T, T_conductance, epsilon_ref, omega, wave_type, output, discretization_type, L_char, origin, delta_V)
+%function [] = DSGF_main(description, discretization, material, T, T_conductance, epsilon_ref, omega, wave_type, output, discretization_type, L_char, origin, delta_V)
+function [] = DSGF_main(description, discretization, material, T, T_conductance, epsilon_ref, omega, wave_type, output, discretization_type, L_char, delta_V, d)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
@@ -52,7 +53,7 @@ constants.c_0 = 299792458;            % Speed of light in vacuum [m/s]
 %%%%%%%%%%%%%%%%%%
 
 % Show figure axes?
-show_axes = true;
+show_axes = false;
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -71,18 +72,25 @@ convergence_analysis = false;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %****************************DISCRETIZATION*******************************%
 
+
+
 if strcmp('sample',discretization_type)
-     [N_each_object, volume, r_each_object, ind_bulk, delta_V_each_object, L_sub_each_object] = read_discretization(discretization, L_char, origin);
+    
+     %[N_each_object, volume, r_each_object, ind_bulk, delta_V_each_object, L_sub_each_object] = read_discretization(discretization, L_char, origin);
+     [N_each_object, volume, r_each_object, ind_bulk, delta_V_each_object, L_sub_each_object,origin] = read_discretization(discretization, L_char,d);
      
      % Discretized lattice including subvolumes of all objects in one matrix (N x 3 matrix)
      r = cell2mat(r_each_object);
-     
+    
      % Total number of subvolumes
-    [N,~] = size(r);
-
+     [N,~] = size(r);
+    
+     r_1 = r(1:ind_bulk(2)-1,:);
+     r_2 = r(ind_bulk(2):N,:);
+     
     % Subvolume size for all N subvolumes (N x 1 vectors)
     delta_V_vector = cell2mat(delta_V_each_object); % Volume of subvolumes for all N subvolumes
-     L_sub_vector = cell2mat(L_sub_each_object);     % Length of side of a cubic subvolume for all N subvolumes
+    L_sub_vector = cell2mat(L_sub_each_object);     % Length of side of a cubic subvolume for all N subvolumes
      
     % UPDATE FOR MORE THAN 2 OBJECTS!
     % Center-of-mass separation distance [m]
@@ -125,7 +133,7 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%
 
 if strcmp('sample',discretization_type)
-    discretization_plotting(r, L_sub_vector, N, show_axes, output, filePath_st.main);
+    discretization_plotting(r, L_sub_vector, N, show_axes, output, filePath_st.main,ind_bulk,r_1,r_2);
 elseif strcmp('user-defined',discretization_type)
     discretization_plotting_user_defined(r, L_sub_vector, N, show_axes, output, filePath_st.main, N1);
 end
@@ -273,19 +281,21 @@ end % End loop through all frequencies
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-[Q_total_subvol, Q_density_subvol, Q_total_subvol_matrix] = total_heat_dissipation_in_subvol(N, omega, Q_omega_subvol, delta_V_vector, r);
+[Q_total_subvol, Q_density_subvol, Q_total_subvol_matrix, Q_total_bulk] = total_heat_dissipation_in_subvol(N, omega, Q_omega_subvol, delta_V_vector, r, ind_bulk);
 
 
 %% 
 %%%%%%%%%%%%%%%%%%
 % Plot heat maps %
 %%%%%%%%%%%%%%%%%%
+    
+    % Heat map in [W] and [W/m^3]
     if strcmp('sample',discretization_type)
-        subvol_heatmap_plotting(r, L_sub_vector, Q_total_subvol, show_axes, output, filePath_st.main);
+        subvol_heatmap_plotting(r, L_sub_vector,Q_total_subvol, Q_density_subvol, show_axes, output, filePath_st.main,ind_bulk,r_1,r_2,N);
     elseif strcmp('user-defined',discretization_type)
-        subvol_heatmap_plotting_user_defined(r, L_sub_vector, Q_total_subvol, show_axes, output, filePath_st.main, N, N1);
+        subvol_heatmap_plotting_user_defined(r, L_sub_vector, Q_total_subvol, Q_density_subvol, show_axes, output, filePath_st.main, N, N1);
     end
-
+    
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Calculate spectral and total conductance at temperature, T_conductance %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
