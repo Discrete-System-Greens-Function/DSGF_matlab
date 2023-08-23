@@ -23,7 +23,7 @@ description = 'test';%'2_spheres_Lx50nm_Ly50nm_Lz50nm_d10nm_N72_discretization';
 
 %********************SELECTION OF TYPE OF SIMULATION *********************%
 
-% Choose between sample or user-defined 
+% Choose between sample or user_defined 
 
 discretization_type = 'sample'; 
 
@@ -46,7 +46,7 @@ if strcmp('sample',discretization_type)
     %      discretization = {Discretization.sphere_8, Discretization.sphere_8};
     %
 
-    discretization = {Discretization.sphere_8, Discretization.sphere_8};
+    discretization = {Discretization.cube_1, Discretization.cube_8};
     
     %**************************SCALE EACH OBJECT**************************%
 
@@ -62,16 +62,16 @@ if strcmp('sample',discretization_type)
     % scaling factor of the user-input cubic lattice.
     %
 
-    L_char = [50.e-9, 50.e-9]; % [m]
+    L_char = [500.e-9, 500.e-9]; % [m]
    
     %**********************DISTANCE BETWEEN OBJECTS***********************%
     
     % Distance between the objects
-    d =10.e-9; %[m]
+    d =500.e-9; %[m]
 
 
     
-elseif strcmp('user-defined',discretization_type)
+elseif strcmp('user_defined',discretization_type)
     
     %********************DISCRETIZATION OF THE SYSTEM*********************%
     %
@@ -178,9 +178,9 @@ output.save_workspace = true;
 
 if strcmp('sample',discretization_type) 
     delta_V = '';
-elseif strcmp('user-defined',discretization_type)
+elseif strcmp('user_defined',discretization_type)
     L_char = '';
-    %origin = '';
+    d = '';
 end    
 
 

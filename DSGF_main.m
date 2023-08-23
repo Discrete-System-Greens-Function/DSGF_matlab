@@ -53,7 +53,7 @@ constants.c_0 = 299792458;            % Speed of light in vacuum [m/s]
 %%%%%%%%%%%%%%%%%%
 
 % Show figure axes?
-show_axes = false;
+show_axes = true; %false
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -104,10 +104,10 @@ if strcmp('sample',discretization_type)
     % Temperature
     T_vector = [T(1).*ones(N_each_object(1),1); T(2).*ones(N_each_object(2),1)];
     
-elseif strcmp('user-defined',discretization_type)
+elseif strcmp('user_defined',discretization_type)
         
     discFile = discretization; % File name of discretization
-    discDir = "Input_parameters/Discretizations/User_defined"; % Directory where discretization is stored
+    discDir = "Library/Discretizations/User_defined"; % Directory where discretization is stored
 
     % Import discretization 
     r = readmatrix(append(append(append(discDir, '/'), discFile), '.txt'));
@@ -134,7 +134,7 @@ end
 
 if strcmp('sample',discretization_type)
     discretization_plotting(r, L_sub_vector, N, show_axes, output, filePath_st.main,ind_bulk,r_1,r_2);
-elseif strcmp('user-defined',discretization_type)
+elseif strcmp('user_defined',discretization_type)
     discretization_plotting_user_defined(r, L_sub_vector, N, show_axes, output, filePath_st.main, N1);
 end
 
@@ -292,7 +292,7 @@ end % End loop through all frequencies
     % Heat map in [W] and [W/m^3]
     if strcmp('sample',discretization_type)
         subvol_heatmap_plotting(r, L_sub_vector,Q_total_subvol, Q_density_subvol, show_axes, output, filePath_st.main,ind_bulk,r_1,r_2,N);
-    elseif strcmp('user-defined',discretization_type)
+    elseif strcmp('user_defined',discretization_type)
         subvol_heatmap_plotting_user_defined(r, L_sub_vector, Q_total_subvol, Q_density_subvol, show_axes, output, filePath_st.main, N, N1);
     end
     

@@ -13,7 +13,7 @@ function [r_each_object, N_each_object, delta_V_each_object, L_sub_each_object, 
 %		volume - volume of bulk object
 
 
-	discDir = append('Input_parameters/Discretizations/', geometry); % Directory where discretization is stored
+	discDir = append('Library/Discretizations/', geometry); % Directory where discretization is stored
 
 	% Import unscaled discretization of each object
 	r_each_object = xlsread(append(append(append(discDir, '/'), discFile), '.xlsx'));
