@@ -46,7 +46,7 @@ if strcmp('sample',discretization_type)
     %      discretization = {Discretization.sphere_8, Discretization.sphere_8};
     %
 
-    discretization = {Discretization.cube_1, Discretization.cube_8};
+    discretization = {Discretization.sphere_1, Discretization.sphere_1};
     
     %**************************SCALE EACH OBJECT**************************%
 
@@ -62,12 +62,12 @@ if strcmp('sample',discretization_type)
     % scaling factor of the user-input cubic lattice.
     %
 
-    L_char = [500.e-9, 500.e-9]; % [m]
+    L_char = [50.e-9, 50.e-9]; % [m]
    
     %**********************DISTANCE BETWEEN OBJECTS***********************%
     
     % Distance between the objects
-    d =500.e-9; %[m]
+    d =10.e-9; %[m]
 
 
     
@@ -132,13 +132,6 @@ T = [300, 400]; % [K]
 T_cond = [200,250,300,350,400]; % [K]
 
 
-%************************** WAVE TYPE (OPTIONAL)**************************%
-
-% Specify the contribution to be accounted: total, propagating only or
-% evanescent only. Choose between "total" or "prop". 
-
-wave_type = "total"; 
-
 
 %*****************************DESIRED OUTPUTS*****************************%
 
@@ -178,9 +171,11 @@ output.save_workspace = true;
 
 if strcmp('sample',discretization_type) 
     delta_V = '';
+    wave_type = "total";
 elseif strcmp('user_defined',discretization_type)
     L_char = '';
     d = '';
+    wave_type = "total";
 end    
 
 
