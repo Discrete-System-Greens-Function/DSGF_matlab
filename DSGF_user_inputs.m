@@ -87,12 +87,12 @@ end
 
 %********************************MATERIAL*********************************%
 % Options:
-%     'SiO_2'
+%     'SiO2'
 %     'SiC'
 %     'SiN'
 %     'user_defined'
 
-material = Material.SiO_2;
+material = Material.SiO2;
 
 
 %********************DIELECTRIC FUNCTION OF BACKGROUND********************%
@@ -107,17 +107,22 @@ epsilon_ref = 1;
 
 % Vector of angular frequencies at which simulations will be run.
 % Vector is of dimension (N_omega x 1)
+
+% Uncomment your selection between uniform_lambda, uniform_omega or non_uniform_omega.
+
+[omega] = uniform_lambda(5e-6, 25e-6, 100); % Wavelength [lambda] limits are provided
+%[omega] = uniform_omega(2e13, 3e14, 100); %Frequencies in [rad/s] limits are provided
+%[omega] = non_uniform_omega(material); %Frequencies in [rad/s] limits are provided
+
 % Suggestions of wavelength range:
 %           SiO2: uniform_lambda(5e-6, 25e-6, 100);
 %           SiC: uniform_lambda(9.92e-6, 13.42e-6, 200);
 %           SiN: uniform_lambda(8e-6, 90e-6, 300);
 
-% Wavelength [lambda] limits are provided
-[omega] = uniform_lambda(5e-6, 25e-6, 100); 
-
-%Frequencies in [rad/s] limits are provided
-%[omega] = uniform_omega(7.53e13, 3.76e14, 100); 
-%[omega] = non_uniform_omega(material);
+% Suggestions of frequency range:
+%           SiO2: uniform_omega(7.53e13, 3.76e14, 100);
+%           SiC: uniform_omega(1.4e14, 1.9e14, 50);
+%           SiN: uniform_omega(2e13, 3e14, 100);
 
 
 %***********************TEMPERATURE OF EACH OBJECT************************%
