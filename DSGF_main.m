@@ -153,7 +153,7 @@ N_omega = length(omega);
 %%%%%%%%%%%%%%%%%%%%%%%%
 
 switch (material)
-	case Material.SiO_2
+	case Material.SiO2
 
 	    epsilon = SiO2_dielectric_function(omega, constants); % (N x 1) vector of all dielectric functions for every frequency
 
