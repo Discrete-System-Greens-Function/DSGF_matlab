@@ -14,5 +14,6 @@ function [omega] = uniform_omega(start_lambda, end_lambda, N_omega)
 	lambda = linspace(start_lambda, end_lambda, N_omega); % [m]
 	c_0 = 299792458;            % Speed of light in vacuum [m/s]
 	omega = (2*pi*c_0./lambda).'; % [rad/s]
+ 	omega = sort(omega, 'ascend');
 
 end
