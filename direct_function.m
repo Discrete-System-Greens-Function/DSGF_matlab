@@ -1,4 +1,4 @@
-function [ G_sys_2D, Trans, Q_omega_bulk, Q_omega_subvol ] = direct_function( omega, r, epsilon, epsilon_ref, delta_V, T_vector, ind_bulk )
+function [ G_sys_2D, Trans, Q_omega_bulk, Q_omega_subvol ] = direct_function( omega, r, epsilon, epsilon_ref, delta_V, T_vector, ind_bulk, wave_type )
 
 % This function calculates the system Green's function, the monochromatic 
 % thermal power dissipated in each subvolume, and the monochromatic thermal
@@ -28,7 +28,7 @@ function [ G_sys_2D, Trans, Q_omega_bulk, Q_omega_subvol ] = direct_function( om
 % Calculate background medium Green's function %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-[ ~, G_0_2D] = G_0_function(r, omega, delta_V, epsilon_ref, N);
+[ ~, G_0_2D] = G_0_function(r, omega, delta_V, epsilon_ref, N, wave_type);
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

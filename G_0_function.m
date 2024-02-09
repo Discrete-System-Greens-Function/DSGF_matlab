@@ -1,4 +1,4 @@
-function [ G_0_4D, G_0_2D ] = G_0_function( r, omega, delta_V, epsilon_ref, N )
+function [ G_0_4D, G_0_2D ] = G_0_function( r, omega, delta_V, epsilon_ref, N, wave_type )
 
 % This function calculates the free-space Green's function for every dipole
 % interaction.  The G_0_4D output is an (N x N x 3 x 3) 4-dimensional
@@ -38,8 +38,41 @@ for j = 1:N-1                            % Loop through all discretized volume l
         
         % Constants
         const_1 = exp(1i*k*r_ij_mag)/(4*pi*r_ij_mag);
-        const_2 = 1 - 1/((k*r_ij_mag)^2) + 1i/(k*r_ij_mag);
-        const_3 = 1 - 3/((k*r_ij_mag)^2) + 3*1i/(k*r_ij_mag);
+        
+        % Total contribution accounts for all wave types 
+        if wave_type == "total"
+            const_2 = 1 - 1/((k*r_ij_mag)^2) + 1i/(k*r_ij_mag);
+            const_3 = 1 - 3/((k*r_ij_mag)^2) + 3*1i/(k*r_ij_mag);
+        end
+
+        %Propagating wave contribution only
+        %between the subvolumes in different membranes
+        if wave_type == "prop"
+            if j<=N/2 && i>N/2
+                const_2 = 1.;% - 1/((k*r_ij_mag)^2) + 1i/(k*r_ij_mag);
+                const_3 = 1.;% - 3/((k*r_ij_mag)^2) + 3*1i/(k*r_ij_mag);
+        
+            else
+                const_2 = 1. - 1./((k*r_ij_mag)^2) + 1.i/(k*r_ij_mag);
+                const_3 = 1. - 3./((k*r_ij_mag)^2) + 3.*1i/(k*r_ij_mag);
+            end
+        end
+        
+        %Evanescent wave contribution only
+        %between the subvolumes in different membranes
+        if wave_type == "evan"
+            if j<=N/2 && i>N/2
+                %const_2 = - 1/((k*r_ij_mag)^2) + 1i/(k*r_ij_mag); %NF and IF terms
+                %const_3 = - 3/((k*r_ij_mag)^2) + 3*1i/(k*r_ij_mag);%NF and IF terms
+                const_2 = - 1/((k*r_ij_mag)^2) ; %NF terms only
+                const_3 = - 3/((k*r_ij_mag)^2) ; %NF terms only
+            else
+                const_2 = 1. - 1./((k*r_ij_mag)^2) + 1.i/(k*r_ij_mag);
+                const_3 = 1. - 3./((k*r_ij_mag)^2) + 3.*1i/(k*r_ij_mag);
+            end
+       end
+ 
+        
         
         % Upper triangular part of Green's function 
         G_0_4D(i,j,:,:) = const_1*( (const_2*I) - (const_3*r_ij_outer_r_ij) );      
