@@ -19,13 +19,12 @@ clear, clc, close all
 % Short description of system you are modeling (this will be used to name
 % the saved files)
 
-description = 'test';%'2_spheres_Lx50nm_Ly50nm_Lz50nm_d10nm_N72_discretization';        %  Sample_2_spheres_r1_50nm_r2_50nm_d_10nm_N_16  '2cubes_total' User-defined_2_cubes_L1_500nm_L2_500nm_d_500nm_N_72
-
+description = '2cubes_L_500nm_d_500nm_N_72';
 %********************SELECTION OF TYPE OF SIMULATION *********************%
 
 % Choose between sample or user_defined 
 
-discretization_type = 'sample'; 
+discretization_type = 'user_defined'; 
 
 if strcmp('sample',discretization_type) 
     
@@ -80,8 +79,8 @@ elseif strcmp('user_defined',discretization_type)
     % according to the name of the file with the desired user-defined discretization. 
     % These files are generated using matlab scripts.
         
-    discretization = "2_thin_films_Lx500nm_Ly500nm_Lz500nm_d500nm_N72_discretization";
-    delta_V = "2_thin_films_Lx500nm_Ly500nm_Lz500nm_d500nm_N72_delta_V_vector";
+    discretization = "2_cubes_Lx500nm_Ly500nm_Lz500nm_d500nm_N72_discretization";
+    delta_V = "2_cubes_Lx500nm_Ly500nm_Lz500nm_d500nm_N72_delta_V_vector";
 
 end
 
