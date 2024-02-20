@@ -1,15 +1,17 @@
 MATLAB DSGF code
+
 Last Update: February 20, 2024
 
 1. SYSTEM REQUIREMENT
+
 A MATLAB license from MathWorks is required. The DSGF code has been tested on MATLAB version R2021a. 
 
 2. INSTALLATION
+
 No installation is required. Download the DSGF_matlab source code.
 
 3. DEMO AND INSTRUCTIONS FOR USE
-
-The only file to be modified is: DSGF_user_inputs.
+   The only file to be modified is: DSGF_user_inputs. Steps
 
 Step 1: Write a description of your simulation. The description will be available in the results table.
 
