@@ -2,7 +2,7 @@ MATLAB DSGF code
 
 Last Update: February 20, 2024
 
-The DSGF (discrete system Green's function) is a numerical framework to simulate radiative heat transfer between micro/nanostructured objects. The DSGF method is based on fluctuational electrodynamics and is applicable to near-field and far-field problems.
+The DSGF (discrete system Green's function) is a numerical framework to simulate radiative heat transfer between micro/nanostructured objects. The DSGF method is based on fluctuational electrodynamics and is applicable to near-field and far-field problems. The DSGF method and solver were developed at the University of Utah. 
 
 
 1. SYSTEM REQUIREMENT
