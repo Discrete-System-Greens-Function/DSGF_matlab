@@ -14,7 +14,7 @@ function [r_each_object, N_each_object, delta_V_each_object, L_sub_each_object] 
 
 
         discFile = discretization; % File name of discretization
-        discDir = "Input_parameters/Discretizations/User_defined"; % Directory where discretization is stored
+        discDir = "Library/Discretizations/User_defined"; % Directory where discretization is stored
 
         % Import unscaled discretization of each object
         r_each_object = readmatrix(append(append(append(discDir, '/'), discFile), '.txt'));
