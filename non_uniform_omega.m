@@ -33,16 +33,16 @@ switch (material)
 
 	    omega_i = 1.4e14;
         N_ref_1 = 5;
-        omega_ref_1 = 1.44e14;
+        omega_ref_1 = 1.43e14;
         N_ref_2 = 60; 
-        omega_ref_2 = 1.7e14 ;
-        N_ref_3 = 3; 
+        omega_ref_2 = 1.55e14 ;
+        N_ref_3 = 25; %15, 10
         omega_ref_3 = 1.76e14 ;
-        N_ref_4 = 7; 
+        N_ref_4 = 5; %10
         omega_ref_4 = 1.8e14 ;
-        N_ref_5 = 10; 
+        N_ref_5 = 5; %10
         omega_ref_5 = 1.84e14;
-        N_ref_6 = 5;
+        N_ref_6 = 5; %10
         omega_f = 1.9e14 ;
 
         N_ref_total = N_ref_1+N_ref_2+N_ref_3+N_ref_4+N_ref_5+N_ref_6;
