@@ -1,6 +1,6 @@
 function [omega] = non_uniform_omega(material)
 switch (material)
-	case Material.SiO_2
+	case Material.SiO2
 
 	    omega_i = 7.5e13;
         N_ref_1 = 20;
