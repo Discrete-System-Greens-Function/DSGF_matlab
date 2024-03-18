@@ -20,7 +20,7 @@ function subvol_heatmap_plotting_bulk_object_user_defined(r, L_sub, Q_total_subv
 
 	% Subvolume heat map for full particles (VIEW 1)
 	heatmap_view_1 = figure(4);
-    axis_y = 'Heat dissipated in a subvolume, Q [W]';
+    axis_y = 'Net total power dissipated per subvolume Q_{t,\Delta v_i} [W]'; %'Heat dissipated in a subvolume, Q [W]';
 	%subplot(1,2,1)
 	%[vert, fac] = voxel_image( r(1:N1,:), L_sub(1), [], [], [], [], 'heatmap', Q_total_subvol(1:N1).' ); % Absorber (T = 0 K)
 	%[vert, fac] = voxel_image( r(N1+1:end,:), L_sub(1), [], [], [], [], 'heatmap', Q_total_subvol(N1+1:end).' ); % Emitter (T = 300 K)
@@ -48,7 +48,7 @@ function subvol_heatmap_plotting_bulk_object_user_defined(r, L_sub, Q_total_subv
 
 	% Subvolume heat map for full particles (VIEW 2)
 	heatmap_view_2 = figure(5);
-    axis_y = 'Normalized heat density [W/m^3] in a subvolume';
+    axis_y = 'Normalized heat density per subvolume [W/m^3]';
 	%subplot(1,2,2)
 	%[vert, fac] = voxel_image( r(1:N1,:), L_sub(1), [], [], [], [], 'heatmap', Q_total_subvol(1:N1).' ); % Absorber (T = 0 K)
 	%[vert, fac] = voxel_image( r(N1+1:end,:), L_sub(1), [], [], [], [], 'heatmap', Q_total_subvol(N1+1:end).' ); % Emitter (T = 300 K)
