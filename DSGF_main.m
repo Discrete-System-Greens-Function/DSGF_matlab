@@ -214,8 +214,11 @@ Trans_omega_12 = zeros(N_omega,1);
 %Trans_omega_13 = zeros(N_omega,1);
 %Trans_lambda_12 = zeros(N_omega,1);
 %Trans_lambda_13 = zeros(N_omega,1);
-Q_omega_bulk = zeros(N_omega, length(ind_bulk));
-Q_omega_subvol = zeros(N_omega, N);
+
+%Q_omega_bulk = zeros(N_omega, length(ind_bulk));
+%Q_omega_subvol = zeros(N_omega, N);
+Q_w_AB = zeros(N_omega, length(ind_bulk));
+Q_w_subvol = zeros(N_omega, N);
 
 for omega_loop = 1:N_omega % Loop through all frequencies
     
@@ -229,7 +232,8 @@ for omega_loop = 1:N_omega % Loop through all frequencies
 	    
 	    case CalculationOption.direct
         
-		[ G_sys_2D, Trans, Q_omega_bulk(omega_loop, :), Q_omega_subvol(omega_loop, :) ] = direct_function(omega(omega_loop), r, epsilon(omega_loop)*ones(N,1), epsilon_ref, delta_V_vector, T_vector, ind_bulk, wave_type);
+		%[ G_sys_2D, Trans, Q_omega_bulk(omega_loop, :), Q_omega_subvol(omega_loop, :) ] = direct_function(omega(omega_loop), r, epsilon(omega_loop)*ones(N,1), epsilon_ref, delta_V_vector, T_vector, ind_bulk, wave_type);
+        	[ G_sys_2D, Trans, Q_w_AB(omega_loop, :), Q_w_subvol(omega_loop, :) ] = direct_function(omega(omega_loop), r, epsilon(omega_loop)*ones(N,1), epsilon_ref, delta_V_vector, T_vector, ind_bulk, wave_type);
         
 	     case CalculationOption.iterative
         
@@ -281,7 +285,8 @@ end % End loop through all frequencies
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-[Q_total_subvol, Q_density_subvol, Q_total_subvol_matrix, Q_total_bulk] = total_heat_dissipation_in_subvol(N, omega, Q_omega_subvol, delta_V_vector, r, ind_bulk);
+%[Q_total_subvol, Q_density_subvol, Q_total_subvol_matrix, Q_total_bulk] = total_heat_dissipation_in_subvol(N, omega, Q_omega_subvol, delta_V_vector, r, ind_bulk);
+[Q_t_subvol, Q_density_subvol, Q_total_subvol_matrix, Q_t] = total_heat_dissipation_in_subvol(N, omega, Q_w_subvol, delta_V_vector, r, ind_bulk);
 
 
 %% 
@@ -291,9 +296,13 @@ end % End loop through all frequencies
     
     % Heat map in [W] and [W/m^3]
     if strcmp('sample',discretization_type)
-        subvol_heatmap_plotting(r, L_sub_vector,Q_total_subvol, Q_density_subvol, show_axes, output, filePath_st.main,ind_bulk,r_1,r_2,N);
+        %subvol_heatmap_plotting(r, L_sub_vector,Q_total_subvol, Q_density_subvol, show_axes, output, filePath_st.main,ind_bulk,r_1,r_2,N);
+	subvol_heatmap_plotting(r, L_sub_vector,Q_t_subvol, Q_density_subvol, show_axes, output, filePath_st.main,ind_bulk,r_1,r_2,N);
+    
     elseif strcmp('user_defined',discretization_type)
-        subvol_heatmap_plotting_user_defined(r, L_sub_vector, Q_total_subvol, Q_density_subvol, show_axes, output, filePath_st.main, N, N1);
+        %subvol_heatmap_plotting_user_defined(r, L_sub_vector, Q_total_subvol, Q_density_subvol, show_axes, output, filePath_st.main, N, N1);
+	subvol_heatmap_plotting_user_defined(r, L_sub_vector, Q_t_subvol, Q_density_subvol, show_axes, output, filePath_st.main, N, N1);
+    
     end
     
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -306,11 +315,13 @@ if output.conductance
 
     for i = 1: length(T_conductance)
         
-    [ G_omega_bulk_12(:,i), G_bulk_12(:,i) ] = conductance_bulk( Trans_omega_12, T_conductance(i), omega );
+    %[ G_omega_bulk_12(:,i), G_bulk_12(:,i) ] = conductance_bulk( Trans_omega_12, T_conductance(i), omega );
+    [ G_w_AB(:,i), G_t_AB(:,i) ] = conductance_bulk( Trans_omega_12, T_conductance(i), omega );
     
     end
     
-    spectral_conductance_plot(omega, G_omega_bulk_12(:,3), output, filePath_st.main);
+    %spectral_conductance_plot(omega, G_omega_bulk_12(:,3), output, filePath_st.main);
+    spectral_conductance_plot(omega, G_w_AB(:,3), output, filePath_st.main);
     
     %{
     [ G_omega_bulk_12, G_bulk_12 ] = conductance_bulk( Trans_omega_12, T_conductance, omega );
