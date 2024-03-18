@@ -1,4 +1,4 @@
-function discretization_plotting(r, L_sub, N, show_axes, output, saveDir)
+function discretization_plotting(r, L_sub, N, show_axes, output, saveDir,ind_bulk,r_1,r_2)
 % Plot the voxel discretization and the normal discretization lattice
 %	
 %	Inputs:
