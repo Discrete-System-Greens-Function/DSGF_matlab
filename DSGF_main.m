@@ -159,8 +159,9 @@ switch (material)
 
 	case Material.SiC
 
-	    epsilon = SiC_dielectric_function(omega, constants); % (N x 1) vector of all dielectric functions for every frequency
+	    %epsilon = SiC_dielectric_function(omega, constants); % (N x 1) vector of all dielectric functions for every frequency
 
+ 	    epsilon = SiC_poly_dielectric_function(omega);
 
 	case Material.SiN
 
