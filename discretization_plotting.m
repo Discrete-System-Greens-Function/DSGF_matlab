@@ -12,7 +12,9 @@ function discretization_plotting(r, L_sub, N, show_axes, output, saveDir)
 	
 	% Plot voxel image of discretization
 	FIG_voxel = figure(1);
-	[vert, fac] = voxel_image( r, L_sub(1), [], [], [], [], 'on', [], [] );
+	%[vert, fac] = voxel_image( r, L_sub(1), [], [], [], [], 'on', [], [] );
+ 	[vert, fac] = voxel_image( r_1, L_sub(ind_bulk(1)), [], [], [], [], 'on', [], [] );
+    	[vert, fac] = voxel_image( r_2, L_sub(ind_bulk(2)), [], [], [], [], 'on', [], [] );
 	xlabel('x-axis (m)');
 	ylabel('y-axis (m)');
 	zlabel('z-axis (m)');
