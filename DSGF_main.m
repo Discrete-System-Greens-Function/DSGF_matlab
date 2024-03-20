@@ -167,6 +167,9 @@ switch (material)
 
 	    epsilon = SiN_dielectric_function(omega, constants); % (N x 1) vector of all dielectric functions for every frequency
 
+	case Material.Si3N4
+
+	    epsilon = SiN_dielectric_function(omega, constants); % (N x 1) vector of all dielectric functions for every frequency
 end
 
 
