@@ -65,7 +65,7 @@ if strcmp('sample',discretization_type)
    
     %**********************DISTANCE BETWEEN OBJECTS***********************%
     
-    % Distance between the objects
+    % Distance between the objects (edge-to-edge gap)
     d =10.e-9; %[m]
 
 
