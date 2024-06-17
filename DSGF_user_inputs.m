@@ -108,8 +108,8 @@ epsilon_ref = 1;
 % Vector of angular frequencies at which simulations will be run.
 % Vector is of dimension (N_omega x 1)
 
-    % Insert the name of the file with the spectral discretization.
-    spectral_discretization = "SiO2_100_uniform_5_25_um.csv"; % "SiC_100_nonuniform_140_190_Trad_s.csv"
+% Insert the name of the file with the spectral discretization.
+spectral_discretization = "SiO2_100_uniform_5_25_um.csv"; % "SiC_100_nonuniform_140_190_Trad_s.csv"
 
 %***********************TEMPERATURE OF EACH OBJECT************************%
 
