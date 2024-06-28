@@ -25,7 +25,7 @@ description = ' 2 cubes SiO2 Lchar = 500 nm, d = 100 nm , N = 2000';% 2films_SiC
 
 % Choose between sample or user_defined 
 
-discretization_type = 'sample'; 
+spatial_discretization_type = 'sample'; 
 
 if strcmp('sample',discretization_type) 
     
