@@ -161,7 +161,7 @@ switch (material)
 
 	    %epsilon = SiC_dielectric_function(omega, constants); % (N x 1) vector of all dielectric functions for every frequency
 
- 	    epsilon = SiC_poly_dielectric_function(omega);
+ 	    epsilon = SiC_poly_dielectric_function(omega); % (N x 1) vector of all dielectric functions for every frequency
 
 	case Material.SiN
 
@@ -324,8 +324,9 @@ if output.conductance
     
     end
     
-    %spectral_conductance_plot(omega, G_omega_bulk_12(:,3), output, filePath_st.main);
-    spectral_conductance_plot(omega, G_w_AB(:,3), output, filePath_st.main);
+    spectral_conductance_plot(omega, G_w_AB(:,:), output, filePath_st.main); % Updated on June 28, 2024
+    %spectral_conductance_plot(omega, G_w_AB(:,3), output, filePath_st.main); % used in v1
+    %spectral_conductance_plot(omega, G_omega_bulk_12(:,3), output, filePath_st.main); % used in v0
     
     %{
     [ G_omega_bulk_12, G_bulk_12 ] = conductance_bulk( Trans_omega_12, T_conductance, omega );
