@@ -7,6 +7,7 @@ function spectral_conductance_plot(omega, G_w_AB, T_cond, output, saveDir)
 %		output - struct containing whether the figure should be saved
 %		saveDir - location for where the figure should be saved
 
+%{
     spectral_conductance_fig = figure(10);
     semilogy(omega, G_w_AB(:,3), '-x', 'linewidth', 2)
     xlabel('Frequency [rad/s]')
@@ -18,7 +19,7 @@ function spectral_conductance_plot(omega, G_w_AB, T_cond, output, saveDir)
     tempstr = sprintf('T = %d K',T_cond(3));
     legend(tempstr , 'location', 'best')
     grid on
-
+%}
     
     % Plot multiple spectral conductance vs. frequency
     multiple_spectral_conductance_fig = figure(11);
@@ -47,8 +48,8 @@ function spectral_conductance_plot(omega, G_w_AB, T_cond, output, saveDir)
     
     % Save figure files
     if output.save_fig
-        spectral_conductance_fig_path = [saveDir '/spectralConductance'];
-        saveas(spectral_conductance_fig, spectral_conductance_fig_path, string(output.figure_format))
+       % spectral_conductance_fig_path = [saveDir '/spectralConductance'];
+       % saveas(spectral_conductance_fig, spectral_conductance_fig_path, string(output.figure_format))
         
         multiple_spectral_conductance_fig_path = [saveDir '/multipleSpectralConductance'];
         saveas(multiple_spectral_conductance_fig, multiple_spectral_conductance_fig_path, string(output.figure_format))
