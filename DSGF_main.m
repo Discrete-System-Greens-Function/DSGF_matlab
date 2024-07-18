@@ -324,7 +324,7 @@ if output.conductance
     
     end
     
-    spectral_conductance_plot(omega, G_w_AB(:,:), output, filePath_st.main); % Updated on June 28, 2024
+    spectral_conductance_plot(omega, G_w_AB(:,:), T_conductance(:), output, filePath_st.main); % Updated on June 28, 2024
     %spectral_conductance_plot(omega, G_w_AB(:,3), output, filePath_st.main); % used in v1
     %spectral_conductance_plot(omega, G_omega_bulk_12(:,3), output, filePath_st.main); % used in v0
     
