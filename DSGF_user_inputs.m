@@ -27,7 +27,7 @@ description = ' 2 cubes SiO2 Lchar = 500 nm, d = 100 nm , N = 2000';% 2films_SiC
 
 spatial_discretization_type = 'sample'; 
 
-if strcmp('sample',discretization_type) 
+if strcmp('sample',spatial_discretization_type) 
     
     %********************DISCRETIZATION OF EACH OBJECT********************%
     % 
@@ -71,7 +71,7 @@ if strcmp('sample',discretization_type)
 
 
     
-elseif strcmp('user_defined',discretization_type)
+elseif strcmp('user_defined',spatial_discretization_type)
     
     %********************DISCRETIZATION OF THE SYSTEM*********************%
     %
@@ -158,10 +158,10 @@ output.transmission_coefficient_matrix = false;
 
 [omega] = readmatrix(append("Library/spectral_discretizations/", spectral_discretization));
 
-if strcmp('sample',discretization_type) 
+if strcmp('sample',spatial_discretization_type) 
     delta_V = '';
     wave_type = "total";
-elseif strcmp('user_defined',discretization_type)
+elseif strcmp('user_defined',spatial_discretization_type)
     L_char = '';
     d = '';
     wave_type = "total";
@@ -169,5 +169,5 @@ end
 
 
 %DSGF_main(description, discretization, material, T, T_cond, epsilon_ref, omega, wave_type, output, discretization_type, L_char, origin, delta_V);
-DSGF_main(description, discretization, material, T, T_cond, epsilon_ref, omega, wave_type, output, discretization_type, L_char, delta_V, d);
+DSGF_main(description, discretization, material, T, T_cond, epsilon_ref, omega, wave_type, output, spatial_discretization_type, L_char, delta_V, d);
 
