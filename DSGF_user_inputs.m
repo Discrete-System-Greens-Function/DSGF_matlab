@@ -146,11 +146,11 @@ output.power_dissipated_bulk = true;
 % Output the heatmap into slices?
 output.heatmap_sliced = false;
 
-% Output the transmission coefficient matrix?
-output.transmission_coefficient_matrix = false;
-
 % Output the DSGF matrices for every frequency?
 output.DSGF_matrix = false;
+
+% Output the transmission coefficient matrix?
+output.transmission_coefficient_matrix = false;
 
                            
 %***************************END OF USER INPUTS****************************%
