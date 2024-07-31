@@ -254,19 +254,19 @@ for omega_loop = 1:N_omega % Loop through all frequencies
     %Trans_lambda_12(omega_loop) = Trans_omega_12(omega_loop)*(omega(omega_loop)^2)/(((2*pi)^2)*c_0);
     %Trans_lambda_13(omega_loop) = Trans_omega_13(omega_loop)*(omega(omega_loop)^2)/(((2*pi)^2)*c_0);
     
- %{       
+     
     %%%%%%%%%%%%%%%%
     % Save results %
     %%%%%%%%%%%%%%%%
-	
+%{   	
     % Save all workspace variables
     if output.save_workspace
         save([filePath_st.main, '/', file_name_saved])
     end
-    
+%}    
         save_DSGF_TRANS_matrix(output, filePath_st, omega_loop, G_sys_2D, Trans);
     
-%}    
+    
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     % Print status to Command window %
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
