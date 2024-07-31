@@ -19,7 +19,7 @@ clear, clc, close all
 % Short description of system you are modeling (this will be used to name
 % the saved files)
 
-description = ' 2 cubes SiO2 Lchar = 500 nm, d = 100 nm , N = 2000';% 2films_SiC_non_uniform_omega_Lx_1um_Ly_1um_t_100nm_d_100nm '2_spheres_Lx50nm_Ly50nm_Lz50nm_d10nm_N72_discretization';  ' 2 membranes t = 100 nm, d = 100 nm , N = 1600'  2cubes_user_defined_L_500nm_d_500nm_SiN    %  Sample_2_spheres_r1_50nm_r2_50nm_d_10nm_N_16  '2cubes_total' User-defined_2_cubes_L1_500nm_L2_500nm_d_500nm_N_72
+description = '2_cubes_SiO2_Lchar_500nm_d_100nm_N_2000';% 
 
 %********************SELECTION OF TYPE OF SIMULATION *********************%
 
@@ -80,8 +80,8 @@ elseif strcmp('user_defined',spatial_discretization_type)
     % according to the name of the file with the desired user-defined discretization. 
     % These files are generated using matlab scripts.
         
-    discretization = "2_membranes_Lx1000nm_Ly1000nm_Lz100nm_d100nm_N1600_discretization"; %"2_cubes_Lx500nm_Ly500nm_Lz500nm_d500nm_N72_discretization"; %
-    delta_V = "2_membranes_Lx1000nm_Ly1000nm_Lz100nm_d100nm_N1600_delta_V_vector"; %"2_cubes_Lx500nm_Ly500nm_Lz500nm_d500nm_N72_delta_V_vector"; %
+    discretization = "2_membranes_Lx1000nm_Ly1000nm_Lz100nm_d100nm_N1600_discretization"; %"2_cubes_Lx500nm_Ly500nm_Lz500nm_d500nm_N576_discretization"; %
+    delta_V = "2_membranes_Lx1000nm_Ly1000nm_Lz100nm_d100nm_N1600_delta_V_vector"; %"2_cubes_Lx500nm_Ly500nm_Lz500nm_d500nm_N576_delta_V_vector"; %
 
 end
 
@@ -89,7 +89,7 @@ end
 % Options:
 %     'SiO2'
 %     'SiC'
-%     'SiN'
+%     'Si3N4'
 %     'user_defined'
 
 material = Material.SiO2;
