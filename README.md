@@ -19,11 +19,11 @@ The DSGF (discrete system Green's function) is a numerical framework to simulate
 
    Step 1: Write a description of your simulation. The description will be available in the results table.
 
-   Step 2: Select the discretization_type between a ‘sample’ or a ‘user-defined’ simulation. ‘Sample’ is used for simulations with spheres, dipoles, and cubes. ‘User-defined’ is used for simulations with membranes.
+   Step 2: Select the discretization_type between a ‘sample’ or a ‘user_defined’ simulation. ‘Sample’ is used for simulations with spheres, dipoles, and cubes. ‘User_defined’ is used for simulations with membranes.
 
    Step 3: Define discretization for your simulation. Different parameters need to be modified depending on your selection in Step 2.
         For ‘sample’, modify: discretization, L_char, and d. 
-        For ‘user-defined’, modify: discretization and delta_V with the names of the discretization files. These files are located in Library/Discretizations/User_defined. 
+        For ‘user_defined’, modify: discretization and delta_V with the names of the discretization files. These files are located in Library/Discretizations/User_defined. 
 
    Step 4: Select material. 
 
