@@ -342,6 +342,10 @@ end % End conductance calculations
 %%%%%%%%%%%%%%%%
 
 clear G_sys_2D;
+clear Trans;
+
+labelRow = cellstr( "Subvolume " + (1:size(Q_w_subvol,2)) ) ; 
+Q_w_subvol_description = [labelRow;num2cell(Q_w_subvol)]; %%Q_w_subvol_description = array2table(Q_w_subvol, 'VariableNames', labelRow)
 
 % Save all workspace variables
 if output.save_workspace
