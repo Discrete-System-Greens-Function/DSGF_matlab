@@ -1,4 +1,4 @@
-function [N_each_object, volume, r_each_object, ind_bulk, delta_V_each_object, L_sub_each_object,origin,A_c] = read_discretization(discretization, L_char, d)
+function [N_each_object, volume, r_each_object, ind_bulk, delta_V_each_object, L_sub_each_object,origin,A_c] = read_discretization_emissivity(discretization, L_char, d)
 % reads all the discretizations for all the bulk objects
 %
 %	Inputs:
