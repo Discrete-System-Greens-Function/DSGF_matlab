@@ -1,4 +1,4 @@
-function [N_each_object, volume, r_each_object, ind_bulk, delta_V_each_object, L_sub_each_object,origin] = read_discretization(discretization, L_char, d)
+function [N_each_object, volume, r_each_object, ind_bulk, delta_V_each_object, L_sub_each_object,origin,A_c] = read_discretization(discretization, L_char, d)
 % reads all the discretizations for all the bulk objects
 %
 %	Inputs:
@@ -24,16 +24,20 @@ function [N_each_object, volume, r_each_object, ind_bulk, delta_V_each_object, L
     
     % Matrix containing Cartesian coordinates of the origin of each object.
     % Origin sample discretizations based on the geometry
-	switch (geometry)
-	    case "sphere"
-		origin = [0,0,0; (L_char(1) + d + L_char(2)), 0, 0]; % [m]  for sphere
-	    case "cube"
-		 origin = [0,0,0; (L_char(1)/2 + d + L_char(2)/2), 0, 0]; % [m] for cube 
-	    case "thin_film"
-
-	    case "dipole"
-		origin = [0,0,0; (L_char(1) + d + L_char(2)), 0, 0]; % [m]  for sphere
-	end % End switch-case through geometries
+    switch (geometry)
+        case "sphere"
+            origin = [0,0,0; (L_char(1) + d + L_char(2)), 0, 0]; % [m]  for sphere
+            A_c = pi*(L_char.^2);            %geometrical cross-section of the bulk object
+            
+        case "cube"
+            origin = [0,0,0; (L_char(1)/2 + d + L_char(2)/2), 0, 0]; % [m] for cube
+            A_c = (L_char.^2);            %geometrical cross-section of the bulk object
+        case "thin_film"
+            
+        case "dipole"
+            origin = [0,0,0; (L_char(1) + d + L_char(2)), 0, 0]; % [m]  for sphere
+            A_c = pi*(L_char.^2);            %geometrical cross-section of the bulk object
+    end % End switch-case through geometries
 
 	% Determine file structure of bulk object discretization and extract
 	% discretization information.
