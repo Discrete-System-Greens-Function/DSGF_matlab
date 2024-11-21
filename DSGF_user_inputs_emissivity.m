@@ -26,8 +26,6 @@ description = '2_cubes_SiO2_Lchar_500nm_d_100nm_N_2000';% Modify this name for y
 % Choose between sample or user_defined 
 
 spatial_discretization_type = 'sample'; 
-
-if strcmp('sample',spatial_discretization_type) 
     
     %********************DISCRETIZATION OF EACH OBJECT********************%
     % 
@@ -70,20 +68,6 @@ if strcmp('sample',spatial_discretization_type)
     d =100.e-9; %[m] edge-to-edge gap distance 
 
    
-    
-elseif strcmp('user_defined',spatial_discretization_type)
-    
-    %********************DISCRETIZATION OF THE SYSTEM*********************%
-    %
-    % Define the discretization for the system (2 group of objects).
-    % The user should modify the discretization and delta_V parameters
-    % according to the name of the file with the desired user-defined discretization. 
-    % These files are generated using matlab scripts.
-        
-    discretization = "2_cubes_Lx500nm_Ly500nm_Lz500nm_d500nm_N72_discretization"; %
-    delta_V =        "2_cubes_Lx500nm_Ly500nm_Lz500nm_d500nm_N72_delta_V_vector"; %
-   
-end
 
 %********************************MATERIAL*********************************%
 % Options:
@@ -149,16 +133,6 @@ output.transmission_coefficient_matrix = false;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 [omega] = readmatrix(append("Library/spectral_discretizations/", spectral_discretization));
-
-if strcmp('sample',spatial_discretization_type) 
-    delta_V = '';
-    wave_type = "total";
-elseif strcmp('user_defined',spatial_discretization_type)
-    L_char = '';
-    d = '';
-    wave_type = "total";
-end    
-
 
 
 if (output.emissivity == true)
