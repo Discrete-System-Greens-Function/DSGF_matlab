@@ -70,7 +70,7 @@ convergence_analysis = false;
 if strcmp('sample',discretization_type)
     
     
-    [N_each_object, volume, r_each_object, ind_bulk, delta_V_each_object, L_sub_each_object,origin,A_c] = read_discretization(discretization, L_char,d);
+    [N_each_object, volume, r_each_object, ind_bulk, delta_V_each_object, L_sub_each_object,origin,A_c] = read_discretization_emissivity(discretization, L_char,d);
     
     % Discretized lattice including subvolumes of all objects in one matrix (N x 3 matrix)
     r = cell2mat(r_each_object);
