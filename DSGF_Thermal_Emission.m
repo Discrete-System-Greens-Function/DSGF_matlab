@@ -93,13 +93,7 @@ if strcmp('sample',discretization_type)
     N_objects = length(L_char);           % number of objects in the system
 
 end
-if strcmp('user_defined',discretization_type)
-  disp('user_defined discretization function is only for the Thermal conductance calculations');
-  disp('The user can modify the sample discretization to get the desired emissivity results');
-  disp('Switch the discretization setting to "sample" to calculate emissivity ');  
-  return;
-  
-end
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -304,7 +298,7 @@ plot(omega, emissivity_per_particle, 'k');hold on;
 xlabel('Radial frequency, \omega [rad/s]');
 ylabel('Spectral emissivity');
 title(['Spectral Emissivity of ' string(material) ' per Object'], 'fontsize', 14);
-grid on;
+
 
 
 

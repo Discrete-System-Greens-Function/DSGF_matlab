@@ -23,9 +23,11 @@ description = '2_cubes_SiO2_Lchar_500nm_d_100nm_N_2000';% Modify this name for y
 
 %********************SELECTION OF TYPE OF SIMULATION *********************%
 
-% Choose between sample or user_defined 
+% Here is a sample 
 
 spatial_discretization_type = 'sample'; 
+
+if strcmp('sample',spatial_discretization_type) 
     
     %********************DISCRETIZATION OF EACH OBJECT********************%
     % 
@@ -68,6 +70,9 @@ spatial_discretization_type = 'sample';
     d =100.e-9; %[m] edge-to-edge gap distance 
 
    
+
+   
+end
 
 %********************************MATERIAL*********************************%
 % Options:
@@ -133,6 +138,11 @@ output.transmission_coefficient_matrix = false;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 [omega] = readmatrix(append("Library/spectral_discretizations/", spectral_discretization));
+
+if strcmp('sample',spatial_discretization_type) 
+    delta_V = '';
+    wave_type = "total";
+end
 
 
 if (output.emissivity == true)
